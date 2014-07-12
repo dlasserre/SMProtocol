@@ -1,14 +1,14 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: dlasserre
- * Date: 12/07/14
- * Time: 20:47
- */
-
+/** Namespace protocol\interfaces */
 namespace protocol\interfaces;
+use engine\server\socket;
 
-
-interface interpret {
-
+/**
+ * Interface interpret
+ * @author Damien Lasserre <damien.lasserre@gmail.com>
+ * @package protocol\interfaces
+ */
+interface interpret
+{
+    public function transmission(socket $socket);
 } 

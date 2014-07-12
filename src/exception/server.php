@@ -1,14 +1,13 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: dlasserre
- * Date: 12/07/14
- * Time: 20:50
- */
-
+/** Namespace engine\exception */
 namespace engine\exception;
 
-
-class server {
+/**
+ * Class server
+ * @author Damien Lasserre <damien.lasserre@gmail.com>
+ * @package engine\exception
+ */
+class server extends \Exception
+{
 
 } 

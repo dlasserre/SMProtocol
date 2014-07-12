@@ -1,14 +1,12 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: dlasserre
- * Date: 12/07/14
- * Time: 22:52
- */
-
+/** Namespace */
 namespace engine\exception;
-
-
-class socket {
+/**
+ * Class socket
+ * @author Damien Lasserre <damien.lasserre@gmail.com>
+ * @package engine\exception
+ */
+class socket extends \Exception
+{
 
 } 
