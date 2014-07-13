@@ -7,6 +7,7 @@ require_once(APPLICATION_PATH.'/protocol/interfaces/interpret.php');
 require_once(APPLICATION_PATH.'/protocol/definition.php');
 
 /** Require_exception files */
+require_once(APPLICATION_PATH.'/src/exception/SMProtocol.php');
 require_once(APPLICATION_PATH.'/src/exception/server.php');
 require_once(APPLICATION_PATH.'/src/exception/client.php');
 require_once(APPLICATION_PATH.'/src/exception/socket.php');

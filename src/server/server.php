@@ -18,20 +18,29 @@ class server extends initialize
     public static $_clients;
     /** @var array array */
     protected $_streams;
+    /** @var  string $_name */
+    protected $_name;
 
     /**
+     * @author Damien Lasserre <damien.lasserre@gmail.com>
      * @param definition | interpret $definition
-     * @throws server
-     * @throws client
+     * @param string $_name
+     * @throws \engine\exception\server
+     * @throws \engine\exception\client
      */
-    public function __construct(definition $definition)
+    public function __construct(definition $definition, $_name)
     {
         /** function to closing socket if signal received */
         pcntl_signal(SIGINT, array('\engine\server\signal', 'handler'));
         pcntl_signal(SIGCHLD, array('\engine\server\signal', 'handler'));
         pcntl_signal(SIGTERM, array('\engine\server\signal', 'handler'));
 
+        /** restarting signal */
+        pcntl_signal(SIGHUP, array($this, 'restart'));
+
         if(false !== parent::__construct($definition)) {
+            /** protocol name */
+            $this->_name = $_name;
             /** Launch wait connection */
             do {
                 /** @var array $_streams */
@@ -53,8 +62,11 @@ class server extends initialize
                             if($_pid < 0) {
                                 throw new client(pcntl_get_last_error());
                             } else if ($_pid) {
+                                if(posix_setsid() < 0) {
+                                    throw new \engine\exception\server('Impossible to make the current process a session leader.');
+                                }
                                 self::$_clients[$_pid] = $_client;
-                            } else {
+                            } else { // Child process
                                 $definition->transmission(new socket($_client));
                             }
                         }
@@ -62,5 +74,10 @@ class server extends initialize
                 }
             } while(self::$__server_listening);
         }
+    }
+
+    public function restart()
+    {
+        echo 'restarting '.$this->_name.'...'.PHP_EOL;
     }
 }

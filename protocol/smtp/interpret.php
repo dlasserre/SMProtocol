@@ -35,4 +35,9 @@ class interpret extends definition implements \protocol\interfaces\interpret
             $socket->ping('PAS COMPRIS');
         }
     }
+
+    public function exception(\Exception $exception)
+    {
+
+    }
 } 

@@ -49,17 +49,14 @@ class initialize
             throw new server(socket_last_error());
         }
         /** Binding socket on host and port. */
-        $dot = '.';
         do {
-            echo 'Binding'.$dot;
             /** @var bool $binding */
             $binding = @socket_bind($_socket, $this->_definition->host, $this->_definition->port);
-            $dot = '.';
         } while($binding <= 0);
         /** Listen socket */
         if(socket_listen($_socket) <= 0) {
             echo socket_last_error();
-            throw new server(socket_last_error());
+            throw new server(socket_last_error($_socket));
         }
         self::$_socket = $_socket;
         /** Return */
