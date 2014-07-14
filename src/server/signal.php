@@ -70,7 +70,6 @@ class signal
         $_copy = SMProtocol::$_servers;
 
         foreach($_copy as $pid => $server) {
-            echo 'signal received and sending !'.PHP_EOL;
             posix_kill($pid, SIGHUP);
         }
     }

@@ -1,20 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="BookmarkManager">
-    <bookmark url="file://$PROJECT_DIR$/src/SMProtocol.php" line="73" />
+    <bookmark url="file://$PROJECT_DIR$/src/SMProtocol.php" line="77" />
   </component>
   <component name="ChangeListManager">
     <list default="true" id="ab39c0fc-0f30-4fd8-8976-0228bf6d295f" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/exception/SMProtocol.php" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/dictionaries/dlasserre.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/server/SMPCommand/quit.php" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/server/SMPCommand/restart.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SMProtocol.php" afterPath="$PROJECT_DIR$/SMProtocol.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/README.md" afterPath="$PROJECT_DIR$/README.md" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/SMProtocol.php" afterPath="$PROJECT_DIR$/src/SMProtocol.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/server/initialize.php" afterPath="$PROJECT_DIR$/src/server/initialize.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/protocol/smtp/interpret.php" afterPath="$PROJECT_DIR$/protocol/smtp/interpret.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/server/server.php" afterPath="$PROJECT_DIR$/src/server/server.php" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/server/signal.php" afterPath="$PROJECT_DIR$/src/server/signal.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/server/socket.php" afterPath="$PROJECT_DIR$/src/server/socket.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="SMProtocol.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -37,13 +32,38 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="SMProtocol.php" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="SMProtocol.php" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/SMProtocol.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="67" column="30" selection-start="2415" selection-end="2415" vertical-scroll-proportion="1.2834507" vertical-offset="477" max-vertical-offset="2772">
-              <folding>
-                <element signature="e#48#76#0" expanded="true" />
-              </folding>
+            <state line="21" column="0" selection-start="455" selection-end="455" vertical-scroll-proportion="0.0" vertical-offset="378" max-vertical-offset="2916">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="interpret.php" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/protocol/smtp/interpret.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="42" column="1" selection-start="222" selection-end="995" vertical-scroll-proportion="0.0" vertical-offset="756" max-vertical-offset="864">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="README.md" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/README.md">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="101" column="0" selection-start="3345" selection-end="3345" vertical-scroll-proportion="0.8184874" vertical-offset="1331" max-vertical-offset="1926">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="socket.php" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/server/socket.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="36" column="67" selection-start="922" selection-end="922" vertical-scroll-proportion="0.0" vertical-offset="648" max-vertical-offset="1314">
+              <folding />
             </state>
           </provider>
         </entry>
@@ -51,7 +71,7 @@
       <file leaf-file-name="signal.php" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/server/signal.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="44" column="0" selection-start="1103" selection-end="1103" vertical-scroll-proportion="-8.481482" vertical-offset="563" max-vertical-offset="2070">
+            <state line="71" column="44" selection-start="1777" selection-end="1777" vertical-scroll-proportion="0.0" vertical-offset="1278" max-vertical-offset="2052">
               <folding />
             </state>
           </provider>
@@ -79,7 +99,6 @@
         <option value="$PROJECT_DIR$/src/exception/client.php" />
         <option value="$PROJECT_DIR$/protocol/definition.php" />
         <option value="$PROJECT_DIR$/src/exception/socket.php" />
-        <option value="$PROJECT_DIR$/src/server/socket.php" />
         <option value="$PROJECT_DIR$/protocol/interfaces/interpret.php" />
         <option value="$PROJECT_DIR$/protocol/smtp/interpret.php" />
         <option value="$PROJECT_DIR$/src/exception/SMProtocol.php" />
@@ -89,8 +108,10 @@
         <option value="$PROJECT_DIR$/src/server/server.php" />
         <option value="$PROJECT_DIR$/SMProtocol.php" />
         <option value="$PROJECT_DIR$/src/server/SMPCommand/quit.php" />
+        <option value="$PROJECT_DIR$/src/server/socket.php" />
         <option value="$PROJECT_DIR$/src/server/signal.php" />
         <option value="$PROJECT_DIR$/src/SMProtocol.php" />
+        <option value="$PROJECT_DIR$/README.md" />
       </list>
     </option>
   </component>
@@ -210,30 +231,13 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="SMProtocol" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="SMProtocol" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="protocol" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="interfaces" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
         </subPane>
       </pane>
     </panes>
   </component>
   <component name="PropertiesComponent">
     <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="FullScreen" value="false" />
   </component>
   <component name="RunManager">
     <configuration default="true" type="PHPUnitRunConfigurationType" factoryName="PHPUnit">
@@ -246,7 +250,7 @@
     <configuration default="true" type="JavascriptDebugType" factoryName="JavaScript Debug" singleton="true">
       <method />
     </configuration>
-    <configuration default="true" type="PhpUnitRemoteRunConfigurationType" factoryName="PHPUnit on Server">
+    <configuration default="true" type="PhpUnitRemoteRunConfigurationType" factoryName="PHPUnit on Server" server_id="1f0ca4e1-dce8-4c08-abda-b6ddb8b17184" server_name="SMProtocol">
       <method />
     </configuration>
     <list size="0" />
@@ -288,20 +292,20 @@
     <layout>
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3291536" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
-      <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="1" side_tool="true" content_ui="tabs" />
-      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="true" content_ui="tabs" />
-      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
+      <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.23499268" sideWeight="0.5" order="1" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.23499268" sideWeight="0.5" order="1" side_tool="false" content_ui="combo" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="true" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="1" side_tool="true" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3291536" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="3" side_tool="false" content_ui="combo" />
@@ -326,116 +330,128 @@
     <breakpoint-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/exception/client.php">
+    <entry file="file://$PROJECT_DIR$/src/SMProtocol.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="5" column="54" selection-start="142" selection-end="142" vertical-scroll-proportion="-3.3333333" vertical-offset="0" max-vertical-offset="306">
+        <state line="21" column="0" selection-start="455" selection-end="455" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="2916">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/exception/socket.php">
+    <entry file="file://$PROJECT_DIR$/protocol/smtp/interpret.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="5" column="54" selection-start="74" selection-end="125" vertical-scroll-proportion="-3.3333333" vertical-offset="0" max-vertical-offset="306">
+        <state line="42" column="1" selection-start="222" selection-end="995" vertical-scroll-proportion="0.0" vertical-offset="756" max-vertical-offset="864">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/README.md">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="101" column="0" selection-start="3345" selection-end="3345" vertical-scroll-proportion="0.0" vertical-offset="1818" max-vertical-offset="1926">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/server/socket.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="22" column="34" selection-start="498" selection-end="498" vertical-scroll-proportion="-14.666667" vertical-offset="0" max-vertical-offset="1314">
+        <state line="36" column="67" selection-start="922" selection-end="922" vertical-scroll-proportion="0.0" vertical-offset="648" max-vertical-offset="1314">
           <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/protocol/definition.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="8" column="16" selection-start="172" selection-end="172" vertical-scroll-proportion="0.24784854" vertical-offset="0" max-vertical-offset="581">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/protocol/interfaces/interpret.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="12" column="49" selection-start="290" selection-end="290" vertical-scroll-proportion="-8.0" vertical-offset="0" max-vertical-offset="342">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/exception/server.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="6" column="54" selection-start="92" selection-end="143" vertical-scroll-proportion="-4.0" vertical-offset="0" max-vertical-offset="324">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/exception/SMProtocol.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="10" column="0" selection-start="202" selection-end="202" vertical-scroll-proportion="0.30981067" vertical-offset="0" max-vertical-offset="581">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/server/initialize.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="50" column="47" selection-start="1457" selection-end="1457" vertical-scroll-proportion="-9.185185" vertical-offset="652" max-vertical-offset="1422">
-          <folding>
-            <element signature="e#62#90#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/protocol/smtp/interpret.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="8" column="54" selection-start="140" selection-end="191" vertical-scroll-proportion="0.10611511" vertical-offset="85" max-vertical-offset="864">
-          <folding>
-            <element signature="e#62#87#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/server/SMPCommand/quit.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="13" column="5" selection-start="266" selection-end="266" vertical-scroll-proportion="-8.666667" vertical-offset="0" max-vertical-offset="396">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/server/SMPCommand/restart.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="14" column="2" selection-start="301" selection-end="301" vertical-scroll-proportion="-9.333333" vertical-offset="0" max-vertical-offset="360">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/SMProtocol.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="14" column="43" selection-start="592" selection-end="592" vertical-scroll-proportion="-9.333333" vertical-offset="0" max-vertical-offset="558">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/server/server.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="82" column="1" selection-start="2996" selection-end="2996" vertical-scroll-proportion="0.80985916" vertical-offset="1016" max-vertical-offset="1584">
-          <folding>
-            <element signature="e#64#92#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/server/signal.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="44" column="0" selection-start="1103" selection-end="1103" vertical-scroll-proportion="-8.481482" vertical-offset="563" max-vertical-offset="2070">
+        <state line="71" column="44" selection-start="1777" selection-end="1777" vertical-scroll-proportion="0.0" vertical-offset="1278" max-vertical-offset="2052">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/exception/client.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="5" column="54" selection-start="142" selection-end="142" vertical-scroll-proportion="-3.3333333" vertical-offset="0" max-vertical-offset="306" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/exception/socket.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="5" column="54" selection-start="74" selection-end="125" vertical-scroll-proportion="-3.3333333" vertical-offset="0" max-vertical-offset="306" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/protocol/definition.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="8" column="16" selection-start="172" selection-end="172" vertical-scroll-proportion="0.24784854" vertical-offset="0" max-vertical-offset="581" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/protocol/interfaces/interpret.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="12" column="49" selection-start="290" selection-end="290" vertical-scroll-proportion="-8.0" vertical-offset="0" max-vertical-offset="342" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/exception/server.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="6" column="54" selection-start="92" selection-end="143" vertical-scroll-proportion="-4.0" vertical-offset="0" max-vertical-offset="324" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/exception/SMProtocol.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="10" column="0" selection-start="202" selection-end="202" vertical-scroll-proportion="0.30981067" vertical-offset="0" max-vertical-offset="581" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/server/initialize.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="50" column="47" selection-start="1457" selection-end="1457" vertical-scroll-proportion="-9.185185" vertical-offset="652" max-vertical-offset="1422" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/server/SMPCommand/quit.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="13" column="5" selection-start="266" selection-end="266" vertical-scroll-proportion="-8.666667" vertical-offset="0" max-vertical-offset="396" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/server/SMPCommand/restart.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="14" column="2" selection-start="301" selection-end="301" vertical-scroll-proportion="-9.333333" vertical-offset="0" max-vertical-offset="360" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/SMProtocol.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="14" column="43" selection-start="592" selection-end="592" vertical-scroll-proportion="-9.333333" vertical-offset="0" max-vertical-offset="558" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/server/server.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="82" column="1" selection-start="2996" selection-end="2996" vertical-scroll-proportion="0.80985916" vertical-offset="1016" max-vertical-offset="1584" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/server/signal.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="71" column="44" selection-start="1777" selection-end="1777" vertical-scroll-proportion="0.0" vertical-offset="1278" max-vertical-offset="2052">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/server/socket.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="36" column="67" selection-start="922" selection-end="922" vertical-scroll-proportion="0.0" vertical-offset="648" max-vertical-offset="1314">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/SMProtocol.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="67" column="30" selection-start="2415" selection-end="2415" vertical-scroll-proportion="1.2834507" vertical-offset="477" max-vertical-offset="2772">
-          <folding>
-            <element signature="e#48#76#0" expanded="true" />
-          </folding>
+        <state line="21" column="0" selection-start="455" selection-end="455" vertical-scroll-proportion="0.0" vertical-offset="378" max-vertical-offset="2916">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/protocol/smtp/interpret.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="42" column="1" selection-start="222" selection-end="995" vertical-scroll-proportion="0.0" vertical-offset="756" max-vertical-offset="864">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/README.md">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="101" column="0" selection-start="3345" selection-end="3345" vertical-scroll-proportion="0.8184874" vertical-offset="1331" max-vertical-offset="1926">
+          <folding />
         </state>
       </provider>
     </entry>

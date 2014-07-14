@@ -11,8 +11,6 @@ class socket
 {
     /** @var resource $_socket */
     private $_socket;
-    /** @var int $_buffer */
-    private $_buffer = 128;
 
     /**
      * @author Damien Lasserre <damien.lasserre@gmail.com>
@@ -35,34 +33,36 @@ class socket
      */
     public function ping($data)
     {
-        if(socket_write($this->_socket, $data, strlen($data)) <= 0)
+        if(socket_write($this->_socket, $data, sizeof($data)) <= 0)
             throw new \engine\exception\socket(socket_last_error($this->_socket));
     }
 
     /**
      * @author Damien Lasserre <damien.lasserre@gmail.com>
      * @param string $data
+     * @param int $_length
      * @return string
      *
      * @description sent data and wait to received data from client
      */
-    public function pingPong($data)
+    public function pingPong($data, $_length = 128)
     {
         $this->ping($data);
         /** @var string $_data */
-        $_data = socket_read($this->_socket, $this->_buffer);
+        $_data = socket_read($this->_socket, $_length);
         return ($_data);
     }
 
     /**
      * @author Damien Lasserre <damien.lasserre@gmail.com>
+     * @param int $_length
      * @return string
      * @description just received data
      */
-    public function pong()
+    public function pong($_length = 128)
     {
         /** @var string $_data */
-        $_data = socket_read($this->_socket, $this->_buffer);
+        $_data = socket_read($this->_socket, $_length);
         return ($_data);
     }
-} 
+}

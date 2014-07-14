@@ -31,10 +31,15 @@ class SMProtocol
         pcntl_signal(SIGTERM, array('\engine\server\signal', 'handleSMP'));
 
         self::$_pid = posix_getpid();
-        $this->launchProtocol();
+        $this->launchProtocols();
     }
 
-    protected function launchProtocol()
+    /**
+     * @author Damien Lasserre <damien.lasserre@gmail.com>
+     * @return bool
+     * @throws exception\SMProtocol
+     */
+    protected function launchProtocols()
     {
         /** @var resource $_dir */
         $_dir = opendir(APPLICATION_PATH.'/protocol/');
@@ -42,11 +47,10 @@ class SMProtocol
         /** @var string $directory */
         while($directory = readdir($_dir))
         {
-            if(is_dir(APPLICATION_PATH.'/protocol/'.$directory) and !in_array($directory, array('interfaces', '..', '.')))
-            {
+            if(is_dir(APPLICATION_PATH.'/protocol/'.$directory)
+                and !in_array($directory, array('interfaces', '..', '.'))) {
                 /** @var string $file */
                 $file = APPLICATION_PATH.'/protocol/'.$directory.'/interpret.php';
-
                 if(file_exists($file)) {
                     /** @noinspection PhpIncludeInspection */
                     require_once($file);
@@ -109,6 +113,9 @@ class SMProtocol
         return (True);
     }
 
+    /**
+     * @author Damien Lasserre <damien.lasserre@gmail.com>
+     */
     public function restart()
     {
         /** Require since PHP 4.3.0 */
@@ -116,15 +123,16 @@ class SMProtocol
         $_copy = SMProtocol::$_servers;
 
         if(is_array($_copy)) {
-            echo 'restarting...'.PHP_EOL;
+            echo '[SMProtocol] restarting...'.PHP_EOL;
             foreach($_copy as $pid => $server) {
                 echo '['.$server['protocol'].'] Shutdown...'.PHP_EOL;
                 posix_kill($pid, SIGKILL);
             }
+            /** empty server list */
             SMProtocol::$_servers = null;
         }
-
-        $this->launchProtocol();
+        /** Reloading */
+        $this->launchProtocols();
     }
 
     /**
