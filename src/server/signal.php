@@ -56,6 +56,9 @@ class signal
             case SIGHUP:
                 self::_sigHup();
                 break;
+            case SIGINT:
+                self::_sigKill();
+                break;
         }
     }
 

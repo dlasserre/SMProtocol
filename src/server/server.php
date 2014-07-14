@@ -38,7 +38,7 @@ class server extends initialize
         /** restarting signal */
         pcntl_signal(SIGHUP, array($this, 'restart'));
 
-        if(false !== parent::__construct($definition)) {
+        if(false !== parent::__construct($definition, $_name)) {
             /** protocol name */
             $this->_name = $_name;
             /** Launch wait connection */
@@ -62,10 +62,12 @@ class server extends initialize
                             if($_pid < 0) {
                                 throw new client(pcntl_get_last_error());
                             } else if ($_pid) {
-                                if(posix_setsid() < 0) {
-                                    throw new \engine\exception\server('Impossible to make the current process a session leader.');
-                                }
                                 self::$_clients[$_pid] = $_client;
+                                /** @var bool $running */
+                                $running = True;
+                                while($running) {
+                                    pcntl_waitpid(-1, $status, WUNTRACED);
+                                }
                             } else { // Child process
                                 $definition->transmission(new socket($_client));
                             }
@@ -76,8 +78,13 @@ class server extends initialize
         }
     }
 
+    /**
+     * @author Damien Lasserre <damien.lasserre@gmail.com>
+     */
     public function restart()
     {
-        echo 'restarting '.$this->_name.'...'.PHP_EOL;
+        /** Close socket */
+        parent::close();
+        exit;
     }
 }

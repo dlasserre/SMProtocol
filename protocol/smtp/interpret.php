@@ -17,7 +17,7 @@ class interpret extends definition implements \protocol\interfaces\interpret
     public function __construct()
     {
         $this->host = '127.0.0.1';
-        $this->port = 4243;
+        $this->port = 4242;
     }
 
     /**

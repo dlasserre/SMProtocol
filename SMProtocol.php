@@ -1,6 +1,12 @@
 #!/usr/bin/php
 <?php
 defined('APPLICATION_PATH') || define('APPLICATION_PATH', realpath(__DIR__));
+/** Color defined */
+defined('COLOR_GREEN') || define('COLOR_GREEN', "\033[92m");
+defined('COLOR_BLUE') || define('COLOR_BLUE', "\033[94m");
+defined('COLOR_ORANGE') || define('COLOR_ORANGE', "\033[93m");
+defined('COLOR_RED') || define('COLOR_RED', "\033[91m");
+defined('COLOR_WHITE') || define('COLOR_WHITE', "\033[0m");
 
 /** Require interface and extended class */
 require_once(APPLICATION_PATH.'/protocol/interfaces/interpret.php');
