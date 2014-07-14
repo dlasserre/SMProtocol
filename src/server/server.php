@@ -31,9 +31,7 @@ class server extends initialize
     public function __construct(definition $definition, $_name)
     {
         /** function to closing socket if signal received */
-        pcntl_signal(SIGINT, array('\engine\server\signal', 'handler'));
         pcntl_signal(SIGCHLD, array('\engine\server\signal', 'handler'));
-        pcntl_signal(SIGTERM, array('\engine\server\signal', 'handler'));
 
         /** restarting signal */
         pcntl_signal(SIGHUP, array($this, 'restart'));
@@ -81,10 +79,10 @@ class server extends initialize
     /**
      * @author Damien Lasserre <damien.lasserre@gmail.com>
      */
-    public function restart()
+    public function restart($sig)
     {
         /** Close socket */
         parent::close();
-        exit;
+        exit($sig);
     }
 }

@@ -1,0 +1,34 @@
+<html>
+<script language="JavaScript">
+    var socket;
+    function createWebSocket(host) {
+        if(window.MozWebSocket) {
+            window.WebSocket=window.MozWebSocket;
+        }
+        if(!window.WebSocket) {
+            alert('Votre navigateur ne supporte pas les webSocket!');
+            return false;
+        } else {
+            socket = new WebSocket(host);
+            socket.onopen = function() { alert('socket ouverte'); }
+            socket.onclose = function() { alert('socket fermée'); }
+            socket.onerror = function() { alert('Une erreur est survenue'); }
+            socket.onmessage = function(msg){
+                try { //tente de parser data
+                    data = JSON.parse(msg.data);
+                } catch(exception) {
+                    data = msg.data
+                }
+                //ici on poura effectuer tout ce que l'on veux sur notre objet data
+            }
+        }
+    }
+    function sendMessage(message) {
+        if(typeof data == 'object') { // si data est un objet on le change en chaine
+            data = JSON.stringify(data);
+        }
+        socket.send(data);
+    }
+    createWebSocket("ws://127.0.0.1:4242");
+</script>
+</html>
