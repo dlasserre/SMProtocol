@@ -13,7 +13,7 @@ class signal
     /**
      * @author Damien Lasserre <damien.lasserre@gmail.com>
      */
-    public static function handler()
+    public static function handler($sig)
     {
         /** Require since PHP 4.3.0 */
         declare(ticks = 1);
@@ -25,13 +25,11 @@ class signal
                     socket_getpeername($client, $address, $port);
                     echo 'closing connection with '.$address.' on port '.$port.PHP_EOL;
                     socket_close($client);
-
                 }
             }
         }
         /** Close server socket */
         initialize::close();
-        exit;
     }
 
     /**
@@ -85,11 +83,14 @@ class signal
     {
         /** Require since PHP 4.3.0 */
         declare(ticks = 1);
-        /** @var array $_copy */
-        $_copy = SMProtocol::$_servers;
 
-        foreach($_copy as $pid => $server) {
-            posix_kill($pid, $sig);
+        if(is_array(SMProtocol::$_servers)) {
+            /** @var array $_copy */
+            $_copy = SMProtocol::$_servers;
+
+            foreach($_copy as $pid => $server) {
+                posix_kill($pid, $sig);
+            }
         }
         exit;
     }

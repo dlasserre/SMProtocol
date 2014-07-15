@@ -1,5 +1,6 @@
 #!/usr/bin/php
 <?php
+/** Global defined */
 defined('APPLICATION_PATH') || define('APPLICATION_PATH', realpath(__DIR__));
 /** Color defined */
 defined('COLOR_GREEN') || define('COLOR_GREEN', "\033[92m");

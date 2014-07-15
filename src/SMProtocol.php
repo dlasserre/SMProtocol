@@ -25,13 +25,9 @@ class SMProtocol
      */
     public function __construct()
     {
-        /** Require since PHP 4.3.0 */
-        declare(ticks = 1);
-
         pcntl_signal(SIGINT, array('\engine\server\signal', 'handleSMP'));
         pcntl_signal(SIGTERM, array('\engine\server\signal', 'handleSMP'));
         pcntl_signal(SIGHUP, array($this, 'restart'));
-
         self::$_pid = posix_getpid();
         $this->launchProtocols();
     }
@@ -68,6 +64,7 @@ class SMProtocol
                                 /** @noinspection PhpUnnecessaryFullyQualifiedNameInspection */
                                 throw new \engine\exception\SMProtocol('Impossible to fork protocol server');
                             } else if($pid) {
+                                posix_setsid(); // session chief
                                 /** increment array of process */
                                 self::$_servers[$pid] = array(
                                     'protocol' => $directory,
@@ -76,6 +73,7 @@ class SMProtocol
 
                                 /** @var bool $running */
                                 $running = True;
+
                                 while($running) {
                                     /** @var int $pid */
                                     $pid = pcntl_waitpid(-1, $status, WUNTRACED);
@@ -96,21 +94,21 @@ class SMProtocol
                                 $_instance = new $_class();
                                 /** @noinspection PhpUnnecessaryFullyQualifiedNameInspection */
                                 new \engine\server\server($_instance, $directory);
-
+                                exit;
                             }
                         } catch(server $server) {
                             /** Catch server exceptions */
-                            if(isset($_instance) and method_exists('_exception', $_instance))
+                            if(isset($_instance) and method_exists($_instance, '_exception'))
                                 $_instance->_exception($server->getMessage());
                             else echo $server->getMessage();
                         } catch(client $client) {
                             /** Catch client exceptions */
-                            if(isset($_instance) and method_exists('_exception', $_instance))
+                            if(isset($_instance) and method_exists($_instance, '_exception'))
                                 $_instance->_exception($client->getMessage());
                             else echo $client->getMessage();
                         }catch(socket $socket ) {
                             /** Catch socket exceptions */
-                            if(isset($_instance) and method_exists('_exception', $_instance))
+                            if(isset($_instance) and method_exists($_instance, '_exception'))
                                 $_instance->_exception($socket->getMessage());
                             else echo $socket->getMessage();
                         }
@@ -127,20 +125,22 @@ class SMProtocol
      */
     public function restart()
     {
-        /** @var array $_copy */
-        $_copy = SMProtocol::$_servers;
-
-        if(is_array($_copy)) {
+        /** Require since PHP 4.3.0 */
+        declare(ticks = 1) {
+            /** @var array $_copy */
+            $_copy = SMProtocol::$_servers;
             echo '[SMProtocol] restarting all services...'.PHP_EOL;
-            foreach($_copy as $pid => $server) {
-                echo '['.$server['protocol'].'] Shutdown...'.PHP_EOL;
-                posix_kill($pid, SIGKILL);
+            if(is_array($_copy)) {
+                foreach($_copy as $pid => $server) {
+                    echo '['.$server['protocol'].'] Shutdown...'.PHP_EOL;
+                    posix_kill($pid, SIGKILL);
+                }
+                /** empty server list */
+                SMProtocol::$_servers = null;
             }
-            /** empty server list */
-            SMProtocol::$_servers = null;
+            /** Reloading */
+            $this->launchProtocols();
         }
-        /** Reloading */
-        $this->launchProtocols();
     }
 
     /**
@@ -149,13 +149,16 @@ class SMProtocol
      */
     public function restartService($pid)
     {
-        if(array_key_exists($pid, self::$_servers)) {
-            /** @var array $_copy */
-            $_copy = self::$_servers[$pid];
+        /** Require since PHP 4.3.0 */
+        declare(ticks = 1) {
+            if(array_key_exists($pid, self::$_servers)) {
+                /** @var array $_copy */
+                $_copy = self::$_servers[$pid];
 
-            unset(self::$_servers[$pid]);
-            $this->launchProtocols($_copy['protocol']);
-        } else /** @noinspection PhpUnnecessaryFullyQualifiedNameInspection */
-            throw new \engine\exception\SMProtocol('Impossible to restart service ['.$pid.']');
+                unset(self::$_servers[$pid]);
+                $this->launchProtocols($_copy['protocol']);
+            } else /** @noinspection PhpUnnecessaryFullyQualifiedNameInspection */
+                throw new \engine\exception\SMProtocol('Impossible to restart service ['.$pid.']');
+        }
     }
 }

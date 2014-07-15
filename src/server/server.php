@@ -30,12 +30,6 @@ class server extends initialize
      */
     public function __construct(definition $definition, $_name)
     {
-        /** function to closing socket if signal received */
-        pcntl_signal(SIGCHLD, array('\engine\server\signal', 'handler'));
-
-        /** restarting signal */
-        pcntl_signal(SIGHUP, array($this, 'restart'));
-
         if(false !== parent::__construct($definition, $_name)) {
             /** protocol name */
             $this->_name = $_name;
@@ -43,30 +37,18 @@ class server extends initialize
             do {
                 /** @var array $_streams */
                 $this->_streams = array(parent::$_socket);
-                $_streams = $this->_streams;
-
+                $_streams = array_merge((array)self::$_clients, $this->_streams);
                 /** @var bool __server_listening */
                 self::$__server_listening = true;
 
                 if(@socket_select($_streams, $array = null, $expect = null, null)) {
-                    /** @var int $i */
-                    for($i = 0; $i < count($_streams); $i++) {
+                    if(in_array(parent::$_socket, $_streams)) {
                         /** @var resource $_client */
-                        $_client = socket_accept(self::$_socket);
-                        echo 'accepted'.PHP_EOL;
-                        if($_client > 0) {
-                            /** @var int $_pid */
-                            $_pid = pcntl_fork();
-                            if($_pid < 0) {
-                                throw new client(pcntl_get_last_error());
-                            } else if ($_pid) {
-                                self::$_clients[$_pid] = $_client;
-                                /** @var bool $running */
-                                $running = True;
-                                while($running) {
-                                    pcntl_waitpid(-1, $status, WUNTRACED);
-                                }
-                            } else { // Child process
+                        $_client = socket_accept(parent::$_socket);
+
+                        if($_client) {
+                            self::$_clients[] = $_client;
+                            if($_client > 0) {
                                 $definition->transmission(new socket($_client));
                             }
                         }
@@ -81,6 +63,9 @@ class server extends initialize
      */
     public function restart($sig)
     {
+        /** Require since PHP 4.3.0 */
+        declare(ticks = 1);
+
         /** Close socket */
         parent::close();
         exit($sig);

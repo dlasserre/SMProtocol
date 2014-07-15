@@ -19,4 +19,9 @@ class definition
     public $socket_domain = AF_INET;
     public $socket_type = SOCK_STREAM;
     public $socket_protocol = SOL_TCP;
+
+    public function __destruct()
+    {
+        exit(SIGCHLD);
+    }
 } 

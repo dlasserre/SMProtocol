@@ -26,14 +26,16 @@ class interpret extends definition implements \protocol\interfaces\interpret
      */
     public function transmission(socket $socket)
     {
-        $socket->ping('HELO'.PHP_EOL);
-        $_response =$socket->pingPong('SAVA'.PHP_EOL);
-        echo $_response.PHP_EOL;
-        if($_response == "OUI\n\n") {
-            $socket->ping('MOI AUSSI !');
-        } else {
-            $socket->ping('PAS COMPRIS');
+        $_data = null;
+        echo '---------------------- START DATA ----------------------'.PHP_EOL;
+        while($data = $socket->pong(128)) {
+            if(strstr($data, "\r\n\r\n")) {
+                break;
+            } else $_data .= $data;
         }
+        echo $_data.PHP_EOL;
+        echo '----------------------- END DATA -----------------------'.PHP_EOL;
+        $socket->_destruct();
     }
 
     public function exception(\Exception $exception)
