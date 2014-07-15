@@ -33,28 +33,27 @@ class server extends initialize
         if(false !== parent::__construct($definition, $_name)) {
             /** protocol name */
             $this->_name = $_name;
-            /** Launch wait connection */
-            do {
-                /** @var array $_streams */
-                $this->_streams = array(parent::$_socket);
-                $_streams = array_merge((array)self::$_clients, $this->_streams);
-                /** @var bool __server_listening */
-                self::$__server_listening = true;
+            /** @var array $_streams */
+            $this->_streams = array(parent::$_socket);
 
-                if(@socket_select($_streams, $array = null, $expect = null, null)) {
+
+            for(;;) {
+                $_streams = array_merge((array)self::$_clients, $this->_streams);
+                if(@socket_select($_streams, $array = null, $expect = null, null) > 0) {
                     if(in_array(parent::$_socket, $_streams)) {
                         /** @var resource $_client */
                         $_client = socket_accept(parent::$_socket);
 
-                        if($_client) {
+                        if($_client > 0) {
                             self::$_clients[] = $_client;
                             if($_client > 0) {
                                 $definition->transmission(new socket($_client));
+                                print_r($_streams);
                             }
                         }
                     }
                 }
-            } while(self::$__server_listening);
+            }
         }
     }
 

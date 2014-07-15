@@ -26,7 +26,7 @@ class socket
             $this->_socket = $socket;
         } else throw new \engine\exception\socket();
         socket_getpeername($this->_socket, $this->_address, $this->_port);
-        echo '['.$this->_address.':'.$this->_port.'] Connected'.PHP_EOL;
+        echo '['.$this->_address.':'.$this->_port.'] Connected ['.posix_getpid().']'.PHP_EOL;
     }
 
     /**
@@ -123,7 +123,7 @@ class socket
 
     public function _destruct()
     {
-        echo '['.$this->_address.':'.$this->_port.'] Connection closing'.PHP_EOL;
+        echo '['.$this->_address.':'.$this->_port.'] Connection closing ['.posix_getpid().']'.PHP_EOL;
         foreach(server::$_clients as $i => $client) {
             if($client == $this->_socket) {
                 echo 'socket remove from list'.PHP_EOL;

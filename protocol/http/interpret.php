@@ -1,6 +1,6 @@
 <?php
 /** Namespace protocol\smtp */
-namespace protocol\smtp;
+namespace protocol\http;
 use engine\server\socket;
 use protocol\definition;
 
@@ -17,7 +17,7 @@ class interpret extends definition implements \protocol\interfaces\interpret
     public function __construct()
     {
         $this->host = '127.0.0.1';
-        $this->port = 4242;
+        $this->port = 8080;
     }
 
     /**

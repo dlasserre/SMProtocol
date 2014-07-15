@@ -47,7 +47,7 @@ class SMProtocol
         while($directory = readdir($_dir))
         {
             if($_protocol == '*' or ($_protocol == $directory)) {
-                if(is_dir(APPLICATION_PATH.'/protocol/'.$directory)
+                if(file_exists(APPLICATION_PATH.'/protocol/'.$directory)
                     and !in_array($directory, array('interfaces', '..', '.'))) {
                     /** @var string $file */
                     $file = APPLICATION_PATH.'/protocol/'.$directory.'/interpret.php';
@@ -70,24 +70,6 @@ class SMProtocol
                                     'protocol' => $directory,
                                     'start' => mktime()
                                 );
-
-                                /** @var bool $running */
-                                $running = True;
-
-                                while($running) {
-                                    /** @var int $pid */
-                                    $pid = pcntl_waitpid(-1, $status, WUNTRACED);
-                                    if($pid) {
-                                        /** @var int $sig */
-                                        $sig = pcntl_wstopsig($status);
-                                        /** If sig HUP receive in child process, restart this. */
-                                        if($sig === SIGHUP) {
-                                            $this->restartService($pid);
-                                        }
-                                    }
-                                }
-                                /** Return */
-                                return ($running);
                             } else { // Child process
                                 echo '['.$directory.'] server detached with pid <'.posix_getpid().'>, parent pid <'.posix_getppid().'>'.PHP_EOL;
                                 /** @var definition $_instance */
@@ -113,6 +95,18 @@ class SMProtocol
                             else echo $socket->getMessage();
                         }
                     }
+                }
+            }
+        }
+        /** @var bool $running */
+        $running = True;
+
+        while($running) {
+            $pid = pcntl_waitpid(-1, $status, WUNTRACED);
+            if($pid) {
+                $sig = pcntl_wstopsig($status);
+                if($sig === SIGHUP) {
+                    $this->restartService($pid);
                 }
             }
         }
