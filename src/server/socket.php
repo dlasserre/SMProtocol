@@ -1,6 +1,7 @@
 <?php
 /** Namespace */
 namespace engine\server;
+use protocol\interfaces\hook;
 
 /**
  * Class socket
@@ -11,21 +12,29 @@ class socket
 {
     /** @var resource $_socket */
     private $_socket;
+    /** @var  string $_address */
     protected $_address;
+    /** @var  int $_port */
     protected $_port;
+    /** @var \protocol\interfaces\hook $_hook */
+    protected $_hook;
 
     /**
      * @author Damien Lasserre <damien.lasserre@gmail.com>
      * @param resource $socket
+     * @param hook $_hook
      * @throws \engine\exception\socket
      * @description just sent data
      */
-    public function __construct(&$socket)
+    public function __construct(&$socket, hook $_hook = null)
     {
+        if(null !== $_hook)
+            $this->_hook = $_hook;
         if(is_resource($socket)) {
             $this->_socket = $socket;
         } else throw new \engine\exception\socket();
         socket_getpeername($this->_socket, $this->_address, $this->_port);
+        (($this->_hook())?$this->_hook->preDispatch($this->_address, $this->_port):null);
         echo '['.$this->_address.':'.$this->_port.'] Connected ['.posix_getpid().']'.PHP_EOL;
     }
 
@@ -37,10 +46,23 @@ class socket
      */
     public function ping($data)
     {
+        (($this->_hook())?$this->_hook->dispatching($data):null);
         if($this->push($data)) {
             /** Return */
             return (True);
         }
+        /** Return */
+        return (False);
+    }
+
+    /**
+     * @author Damien Lasserre <damien.lasserre@gmail.com>
+     * @return bool
+     */
+    protected function _hook()
+    {
+        if($this->_hook instanceof hook)
+            return (True);
         /** Return */
         return (False);
     }
@@ -55,12 +77,15 @@ class socket
      */
     public function pingPong($data, $_length = 128)
     {
+        (($this->_hook())?$this->_hook->dispatching($data):null);
         if($this->ping($data)) {
             if($_data = $this->pull($_length)) {
+                (($this->_hook())?$this->_hook->postDispatch($_data):null);
                 /** Return */
                 return ($_data);
             }
         }
+        (($this->_hook())?$this->_hook->postDispatch(null):null);
         /** Return */
         return (False);
     }
@@ -76,9 +101,11 @@ class socket
     {
         /** @var string $_data */
         if($_data = $this->pull($_length)) {
+            (($this->_hook())?$this->_hook->postDispatch($_data):null);
             /** Return */
             return ($_data);
         }
+        (($this->_hook())?$this->_hook->dispatching(null):null);
         /** Return */
         return (False);
     }
@@ -92,8 +119,9 @@ class socket
     {
         /** @var string $_data */
         $_data = @socket_read($this->_socket, $_buffer);
-
+        (($this->_hook())?$this->_hook->dispatching($_data):null);
         if($_data) {
+            (($this->_hook())?$this->_hook->postDispatch($_data):null);
             /** Return */
             return ($_data);
         } else {
@@ -121,6 +149,9 @@ class socket
         return (False);
     }
 
+    /**
+     * @author Damien Lasserre <damien.lasserre@gmail.com>
+     */
     public function _destruct()
     {
         echo '['.$this->_address.':'.$this->_port.'] Connection closing ['.posix_getpid().']'.PHP_EOL;
