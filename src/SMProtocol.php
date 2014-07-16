@@ -1,11 +1,14 @@
 <?php
 /** Namespace engine */
 namespace engine;
+/** Namespace usage */
 use engine\exception\client;
 use engine\exception\server;
 use engine\exception\socket;
 use engine\server\signal;
 use protocol\definition;
+/** Use in dynamic class variable */
+use smtp\hook;
 
 /**
  * Class SMProtocol
@@ -18,7 +21,6 @@ class SMProtocol
     public static $_servers;
     /** @var  int $_pid */
     public static $_pid;
-
 
     /**
      * @author Damien Lasserre <damien.lasserre@gmail.com>
@@ -42,6 +44,8 @@ class SMProtocol
     {
         /** @var resource $_dir */
         $_dir = opendir(APPLICATION_PATH.'/protocol/');
+        /** @var \protocol\interfaces\hook $_hooks */
+        $_hook = null;
 
         include('header.txt');
         echo PHP_EOL;
@@ -55,20 +59,8 @@ class SMProtocol
                     $file = APPLICATION_PATH.'/protocol/'.$directory.'/interpret.php';
                     if(file_exists($file)) {
                         echo COLOR_RED.'------------ '.strtolower($directory).' ------------'.COLOR_WHITE.PHP_EOL;
-                        /** @var string $hook */
-                        $hook = APPLICATION_PATH.'/protocol/'.$directory.'/hook';
-                        if(is_dir($hook)) {
-                            /** @var resource $_hook_dir */
-                            $_hook_dir = opendir($hook);
-                            /** @var string $_hook */
-                            while($_hook = readdir($_hook_dir)) {
-                                if(!in_array($_hook, array('.', '..'))) {
-                                    echo '['.$directory.'] '.COLOR_ORANGE.'Hook ['.COLOR_RED.$_hook.COLOR_WHITE.'] '.COLOR_GREEN.'loaded'.COLOR_WHITE.PHP_EOL;
-                                    /** @noinspection PhpIncludeInspection */
-                                    require_once($hook.'/'.$_hook);
-                                }
-                            }
-                        }
+                        /** @var \protocol\interfaces\hook $_hook */
+                        $_hook = $this->loadHook($directory);
                         /** @noinspection PhpIncludeInspection */
                         require_once($file);
                         /** @var string $_class */
@@ -87,14 +79,20 @@ class SMProtocol
                                     'protocol' => $directory,
                                     'start' => mktime()
                                 );
+                                /** Just for waiting binding and print information in output. */
                                 sleep(3);
                             } else { // Child process
-                                echo '['.$directory.'] '.COLOR_GREEN.'Success:'.COLOR_WHITE.' detached with pid <'.COLOR_BLUE.posix_getpid().COLOR_WHITE.'>, parent pid <'.COLOR_BLUE.posix_getppid().COLOR_WHITE.'>'.PHP_EOL;
-                                echo PHP_EOL;
                                 /** @var definition $_instance */
                                 $_instance = new $_class();
+                                if(!$this->rootPrivilege($_instance->port)) {
+                                    echo COLOR_RED.$directory.' Stopped...'.COLOR_WHITE.PHP_EOL;
+                                    unset($_instance);
+                                    continue;
+                                }
+                                echo '['.$directory.'] '.COLOR_GREEN.'Success:'.COLOR_WHITE.' detached with pid <'.COLOR_BLUE.posix_getpid().COLOR_WHITE.'>, parent pid <'.COLOR_BLUE.posix_getppid().COLOR_WHITE.'>'.PHP_EOL;
+                                echo PHP_EOL;
                                 /** @noinspection PhpUnnecessaryFullyQualifiedNameInspection */
-                                new \engine\server\server($_instance, $directory);
+                                new \engine\server\server($_instance, $directory, $_hook);
                                 exit;
                             }
                         } catch(server $server) {
@@ -129,6 +127,60 @@ class SMProtocol
                     $this->restartService($pid);
                 }
             }
+        }
+        /** Return */
+        return (True);
+    }
+
+    /**
+     * @author Damien Lasserre <damien.lasserre@gmail.com>
+     * @param $_protocol
+     * @return null|\protocol\interfaces\hook
+     */
+    protected function loadHook($_protocol)
+    {
+        /** @var \protocol\interfaces\hook $_hook */
+        $_hook = null;
+        /** @var string $hook */
+        $_hook_path = APPLICATION_PATH.'/protocol/'.$_protocol.'/hook.php';
+        /** @var string $_class_hook */
+        $_class_hook = $_protocol.'\hook';
+
+        /** cached file  */
+        if(is_file($_hook_path)) {
+            /** @noinspection PhpIncludeInspection */
+            require_once($_hook_path);
+            /** @var \protocol\interfaces\hook $_hook */
+            $_hook = new $_class_hook();
+            /** @var array $_interfaces */
+            $_interfaces = class_implements($_hook);
+
+            if(!array_key_exists('protocol\interfaces\hook', $_interfaces)) {
+                echo COLOR_RED.'['.$_protocol.'] Fail Hook not implement hook interface, hook not loaded'.COLOR_WHITE.PHP_EOL;
+                /** @var null $_hook */
+                $_hook = null;
+            } else
+                echo '['.$_protocol.'] '.COLOR_ORANGE.'Class Hook '.COLOR_GREEN.'loaded'.COLOR_WHITE.PHP_EOL;
+        }
+
+        /** Return */
+        return ($_hook);
+    }
+
+    /**
+     * @author Damien Lasserre <damien.lasserre@gmail.com>
+     * @param int $port
+     * @return bool
+     */
+    protected function rootPrivilege($port)
+    {
+        /** @var int $uid */
+        $uid = posix_getuid();
+
+        if($port <= 1024 and $uid > 0) {
+            echo COLOR_ORANGE.'Warning: You specified port under 1024, need root privileges to bind socket.'.PHP_EOL;
+            /** Return */
+            return (False);
         }
         /** Return */
         return (True);
