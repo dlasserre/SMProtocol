@@ -36,19 +36,20 @@ class server extends initialize
             /** @var array $_streams */
             $this->_streams = array(parent::$_socket);
 
-
             for(;;) {
+                /** @var array $_streams */
                 $_streams = array_merge((array)self::$_clients, $this->_streams);
+
                 if(@socket_select($_streams, $array = null, $expect = null, null) > 0) {
                     if(in_array(parent::$_socket, $_streams)) {
                         /** @var resource $_client */
                         $_client = socket_accept(parent::$_socket);
 
                         if($_client > 0) {
+
                             self::$_clients[] = $_client;
                             if($_client > 0) {
                                 $definition->transmission(new socket($_client));
-                                print_r($_streams);
                             }
                         }
                     }

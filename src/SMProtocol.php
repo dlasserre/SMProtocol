@@ -43,6 +43,8 @@ class SMProtocol
         /** @var resource $_dir */
         $_dir = opendir(APPLICATION_PATH.'/protocol/');
 
+        include('header.txt');
+        echo PHP_EOL;
         /** @var string $directory */
         while($directory = readdir($_dir))
         {
@@ -52,11 +54,26 @@ class SMProtocol
                     /** @var string $file */
                     $file = APPLICATION_PATH.'/protocol/'.$directory.'/interpret.php';
                     if(file_exists($file)) {
+                        echo COLOR_RED.'------------ '.strtolower($directory).' ------------'.COLOR_WHITE.PHP_EOL;
+                        /** @var string $hook */
+                        $hook = APPLICATION_PATH.'/protocol/'.$directory.'/hook';
+                        if(is_dir($hook)) {
+                            /** @var resource $_hook_dir */
+                            $_hook_dir = opendir($hook);
+                            /** @var string $_hook */
+                            while($_hook = readdir($_hook_dir)) {
+                                if(!in_array($_hook, array('.', '..'))) {
+                                    echo '['.$directory.'] '.COLOR_ORANGE.'Hook ['.COLOR_RED.$_hook.COLOR_WHITE.'] '.COLOR_GREEN.'loaded'.COLOR_WHITE.PHP_EOL;
+                                    /** @noinspection PhpIncludeInspection */
+                                    require_once($hook.'/'.$_hook);
+                                }
+                            }
+                        }
                         /** @noinspection PhpIncludeInspection */
                         require_once($file);
                         /** @var string $_class */
                         $_class = '\protocol\\'.$directory.'\interpret';
-                        echo '['.$directory.'] Starting...'.PHP_EOL;
+                        echo '['.$directory.'] '.COLOR_ORANGE.'Starting...'.COLOR_WHITE.PHP_EOL;
                         try {
                             /** @var int $pid */
                             $pid = pcntl_fork();
@@ -70,8 +87,10 @@ class SMProtocol
                                     'protocol' => $directory,
                                     'start' => mktime()
                                 );
+                                sleep(3);
                             } else { // Child process
-                                echo '['.$directory.'] server detached with pid <'.posix_getpid().'>, parent pid <'.posix_getppid().'>'.PHP_EOL;
+                                echo '['.$directory.'] '.COLOR_GREEN.'Success:'.COLOR_WHITE.' detached with pid <'.COLOR_BLUE.posix_getpid().COLOR_WHITE.'>, parent pid <'.COLOR_BLUE.posix_getppid().COLOR_WHITE.'>'.PHP_EOL;
+                                echo PHP_EOL;
                                 /** @var definition $_instance */
                                 $_instance = new $_class();
                                 /** @noinspection PhpUnnecessaryFullyQualifiedNameInspection */
@@ -94,6 +113,7 @@ class SMProtocol
                                 $_instance->_exception($socket->getMessage());
                             else echo $socket->getMessage();
                         }
+
                     }
                 }
             }

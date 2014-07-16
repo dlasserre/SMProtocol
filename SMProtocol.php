@@ -10,6 +10,7 @@ defined('COLOR_RED') || define('COLOR_RED', "\033[91m");
 defined('COLOR_WHITE') || define('COLOR_WHITE', "\033[0m");
 
 /** Require interface and extended class */
+require_once(APPLICATION_PATH.'/protocol/interfaces/hook.php');
 require_once(APPLICATION_PATH.'/protocol/interfaces/interpret.php');
 require_once(APPLICATION_PATH.'/protocol/definition.php');
 
