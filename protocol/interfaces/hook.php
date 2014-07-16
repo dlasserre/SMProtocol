@@ -12,9 +12,11 @@ interface hook
 {
     /**
      * @author Damien Lasserre <dlasserre@talend.com>
+     * @param string $address
+     * @param int $port
      * @return mixed
      */
-    public function preDispatch();
+    public function preDispatch($address, $port);
 
     /**
      * @author Damien Lasserre <dlasserre@talend.com>
