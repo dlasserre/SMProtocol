@@ -6,12 +6,13 @@ namespace protocol;
  * @author Damien Lasserre <damien.lasserre@gmail.com>
  * @package protocol
  */
-class definition
+abstract class definition extends \stdClass implements interfaces\interpret
 {
     public $host;
     /** if port < 1024, must run server with root privilege */
     public $port;
     public $max_connection;
+    public $block_size = 512;
 
     public $forward_host;
     public $forward_port;
