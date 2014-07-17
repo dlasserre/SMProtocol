@@ -8,7 +8,8 @@
 
 namespace src\interfaces;
 
-
-class api {
-
+interface api
+{
+    public function get();
+    public function post();
 } 

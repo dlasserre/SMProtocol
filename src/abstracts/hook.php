@@ -16,6 +16,16 @@ abstract class hook implements src\interfaces\hook
         return ($this->_sender->send($data));
     }
 
+    public function getAddress()
+    {
+        return ($this->_sender->address);
+    }
+
+    public function getPort()
+    {
+        return ($this->_sender->port);
+    }
+
     public function close()
     {
         $this->_sender->close();

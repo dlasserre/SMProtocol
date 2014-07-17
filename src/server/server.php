@@ -1,6 +1,7 @@
 <?php
 /** Namespace engine / server */
 namespace engine\server;
+use engine\SMProtocol;
 use protocol\definition;
 use protocol\interfaces\hook;
 
@@ -59,8 +60,8 @@ class server extends initialize
                                 self::$_clients[] = $_client;
                                 /** @var string $_hook_class */
                                 $_hook_class = $this->_name.'\hook';
-                                /** @var hook $_hook */
-                                $_hook = new $_hook_class(new sender($_client, $definition));
+                                /** @var \src\interfaces\hook $_hook */
+                                $_hook = new $_hook_class(new sender($_client, $definition, $_name));
                                 socket_getpeername($_client, $address, $port);
                                 /** Call preDispatching hook method */
                                 $_hook->preDispatch($address, $port);

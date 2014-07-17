@@ -3,6 +3,7 @@
 namespace engine\server;
 /** Use */
 use engine\exception\socket;
+use engine\SMProtocol;
 use protocol\definition;
 
 /**
@@ -12,8 +13,9 @@ use protocol\definition;
  */
 class sender
 {
-    /** @var  resource $_forward */
-    private $_forward;
+    protected $_protocol;
+    public $address;
+    public $port;
 
     /** @var resource $_socket */
     protected $_socket;
@@ -24,13 +26,16 @@ class sender
     /**
      * @author Damien Lasserre <dlasserre@talend.com>
      * @param resource $_socket
+     * @param string $_protocol
      * @param $definition $definition
      */
-    public function __construct($_socket, definition $definition)
+    public function __construct($_socket, \src\abstracts\definition $definition, $_protocol)
     {
+        socket_getpeername($_socket, $this->address, $this->port);
         $this->close = False;
         if(is_resource($_socket)) {
             $this->_socket = $_socket;
+            $this->_protocol = $_protocol;
         }
     }
 

@@ -21,7 +21,6 @@ class hook extends \hook
 
     public function dispatch($input)
     {
-        echo $input.PHP_EOL;
         $this->send('OK 250'.PHP_EOL);
     }
 

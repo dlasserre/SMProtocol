@@ -121,12 +121,17 @@ class SMProtocol
         $running = True;
 
         while($running) {
-            $pid = pcntl_waitpid(-1, $status, WUNTRACED);
+            $pid = pcntl_waitpid(-1, $status, WNOHANG);
             if($pid) {
                 $sig = pcntl_wstopsig($status);
                 if($sig === SIGHUP) {
                     $this->restartService($pid);
                 }
+            }
+            /** Restart all services if SIGHUP send as SMP process */
+            @pcntl_sigwaitinfo(array(SIGHUP), $info);
+            if((int)$info['signo'] === SIGHUP) {
+                $this->restart();
             }
         }
         /** Return */
@@ -136,11 +141,11 @@ class SMProtocol
     /**
      * @author Damien Lasserre <damien.lasserre@gmail.com>
      * @param $_protocol
-     * @return null|\protocol\interfaces\hook
+     * @return null|\src\interfaces\hook
      */
     protected function loadHook($_protocol)
     {
-        /** @var \protocol\interfaces\hook $_hook */
+        /** @var \src\interfaces\hook $_hook */
         $_hook = null;
         /** @var string $hook */
         $_hook_path = APPLICATION_PATH.'/protocol/'.$_protocol.'/hook.php';

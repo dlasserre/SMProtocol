@@ -33,7 +33,6 @@ require_once(APPLICATION_PATH.'/src/exception/socket.php');
 require_once(APPLICATION_PATH.'/src/server/signal.php');
 require_once(APPLICATION_PATH.'/src/server/initialize.php');
 require_once(APPLICATION_PATH.'/src/server/server.php');
-require_once(APPLICATION_PATH.'/src/server/socket.php');
 
 /** Bootstrap application */
 /** including all protocols in protocol directory */

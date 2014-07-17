@@ -2,7 +2,8 @@
 /** Namespace engine\server */
 namespace engine\server;
 use engine\exception\server;
-use protocol\definition;
+use engine\SMProtocol;
+use src\abstracts\definition;
 
 /**
  * Class initialize
@@ -29,7 +30,7 @@ class initialize
     {
         if($definition->host and $definition->port) {
             $this->_name = $_name;
-            /** @var definition _definition */
+            /** @var \src\abstracts\definition _definition */
             $this->_definition = $definition;
             if($this->_initSocket())
                 /** Return */
