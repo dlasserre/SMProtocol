@@ -1,11 +1,8 @@
 <?php
 /** Namespace engine / server */
 namespace engine\server;
-use engine\exception\client;
-use hook\smtp;
 use protocol\definition;
 use protocol\interfaces\hook;
-use protocol\smtp\interpret;
 
 /**
  * Class server
