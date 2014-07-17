@@ -10,5 +10,5 @@ use engine\server\socket;
  */
 interface interpret
 {
-    public function transmission(socket $socket);
+    public function exception(\Exception $exception);
 } 
