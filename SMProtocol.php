@@ -11,6 +11,8 @@ defined('COLOR_WHITE') || define('COLOR_WHITE', "\033[0m");
 
 /** Require interface and extended class */
 require_once(APPLICATION_PATH.'/protocol/interfaces/hook.php');
+require_once(APPLICATION_PATH.'/src/server/sender.php');
+require_once(APPLICATION_PATH.'/protocol/hook.php');
 require_once(APPLICATION_PATH.'/protocol/interfaces/interpret.php');
 require_once(APPLICATION_PATH.'/protocol/definition.php');
 
