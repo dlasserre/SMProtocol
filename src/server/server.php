@@ -98,6 +98,27 @@ class server extends initialize
     /**
      * @author Damien Lasserre <damien.lasserre@gmail.com>
      */
+    public function kill()
+    {
+        declare(ticks=1);
+
+        if(is_array(self::$_clients)) {
+            foreach(self::$_clients as $client) {
+                if(is_resource($client)) {
+                    socket_close($client);
+                }
+            }
+        }
+        if(is_resource(parent::$_socket))
+            socket_close(parent::$_socket);
+
+        /** Close child */
+        exit(SIGCHLD);
+    }
+
+    /**
+     * @author Damien Lasserre <damien.lasserre@gmail.com>
+     */
     public function restart($sig)
     {
         /** Require since PHP 4.3.0 */
