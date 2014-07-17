@@ -7,8 +7,6 @@ use engine\exception\server;
 use engine\exception\socket;
 use engine\server\signal;
 use protocol\definition;
-/** Use in dynamic class variable */
-use smtp\hook;
 
 /**
  * Class SMProtocol
@@ -46,6 +44,8 @@ class SMProtocol
         $_dir = opendir(APPLICATION_PATH.'/protocol/');
         /** @var \protocol\interfaces\hook $_hooks */
         $_hook = null;
+        /** @var array $_exclude_files */
+        $_exclude_files = array('interfaces', 'hook.php', 'definition.php', '.', '..');
 
         include('header.txt');
         echo PHP_EOL;
@@ -112,6 +112,8 @@ class SMProtocol
                             else echo $socket->getMessage();
                         }
 
+                    } else if(!in_array($file, $_exclude_files)) {
+                        echo '['.$directory.'] '.COLOR_RED.'Error: definition file not found...'.COLOR_WHITE.PHP_EOL;
                     }
                 }
             }
