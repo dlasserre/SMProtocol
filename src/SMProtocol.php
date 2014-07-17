@@ -54,18 +54,18 @@ class SMProtocol
         {
             if($_protocol == '*' or ($_protocol == $directory)) {
                 if(file_exists(APPLICATION_PATH.'/protocol/'.$directory)
-                    and !in_array($directory, array('interfaces', '..', '.'))) {
+                    and !in_array($directory, $_exclude_files)) {
                     /** @var string $file */
-                    $file = APPLICATION_PATH.'/protocol/'.$directory.'/interpret.php';
+                    $file = APPLICATION_PATH.'/protocol/'.$directory.'/definition.php';
                     if(file_exists($file)) {
                         echo COLOR_RED.'------------ '.strtolower($directory).' ------------'.COLOR_WHITE.PHP_EOL;
-                        /** @var \protocol\interfaces\hook $_hook */
-                        $_hook = $this->loadHook($directory);
                         /** @noinspection PhpIncludeInspection */
                         require_once($file);
                         /** @var string $_class */
-                        $_class = '\protocol\\'.$directory.'\interpret';
+                        $_class = '\protocol\\'.$directory.'\definition';
                         echo '['.$directory.'] '.COLOR_ORANGE.'Starting...'.COLOR_WHITE.PHP_EOL;
+                        /** @var \protocol\interfaces\hook $_hook */
+                        $this->loadHook($directory);
                         try {
                             /** @var int $pid */
                             $pid = pcntl_fork();
@@ -92,7 +92,7 @@ class SMProtocol
                                 echo '['.$directory.'] '.COLOR_GREEN.'Success:'.COLOR_WHITE.' detached with pid <'.COLOR_BLUE.posix_getpid().COLOR_WHITE.'>, parent pid <'.COLOR_BLUE.posix_getppid().COLOR_WHITE.'>'.PHP_EOL;
                                 echo PHP_EOL;
                                 /** @noinspection PhpUnnecessaryFullyQualifiedNameInspection */
-                                new \engine\server\server($_instance, $directory, $_hook);
+                                new \engine\server\server($_instance, $directory);
                                 exit;
                             }
                         } catch(server $server) {
