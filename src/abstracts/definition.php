@@ -1,12 +1,12 @@
 <?php
 /** Namespace protocol */
-namespace protocol;
+namespace src\abstracts;
 /**
  * Class definition
  * @author Damien Lasserre <damien.lasserre@gmail.com>
  * @package protocol
  */
-abstract class definition extends \stdClass implements interfaces\interpret
+abstract class definition extends \stdClass implements \src\interfaces\definition
 {
     public $host;
     /** if port < 1024, must run server with root privilege */

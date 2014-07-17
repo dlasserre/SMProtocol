@@ -22,12 +22,12 @@ class server extends initialize
 
     /**
      * @author Damien Lasserre <damien.lasserre@gmail.com>
-     * @param definition $definition
+     * @param \src\abstracts\definition $definition
      * @param string $_name
      * @throws \engine\exception\server
      * @throws \engine\exception\client
      */
-    public function __construct(definition $definition, $_name)
+    public function __construct(\src\abstracts\definition $definition, $_name)
     {
         pcntl_signal(SIGINT, array($this, 'kill'));
 

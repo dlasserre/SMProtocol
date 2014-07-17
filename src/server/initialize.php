@@ -20,12 +20,12 @@ class initialize
 
     /**
      * @author Damien Lasserre <damien.lasserre@gmail.com>
-     * @param definition $definition
+     * @param \src\abstracts\definition $definition
      * @param $_name
      * @throws \engine\exception\server
      * @internal param string $name
      */
-    public function __construct(definition $definition, $_name)
+    public function __construct(\src\abstracts\definition $definition, $_name)
     {
         if($definition->host and $definition->port) {
             $this->_name = $_name;

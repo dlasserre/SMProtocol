@@ -2,7 +2,7 @@
 /**
  * @author Damien Lasserre <dlasserre@talend.com>
  */
-namespace protocol\interfaces;
+namespace src\interfaces;
 /**
  * Interface hook
  * @author Damien Lasserre <dlasserre@talend.com>

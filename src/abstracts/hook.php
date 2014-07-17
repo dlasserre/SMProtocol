@@ -2,7 +2,7 @@
 /**
  * Class hook
  */
-abstract class hook implements \protocol\interfaces\hook
+abstract class hook implements src\interfaces\hook
 {
     private $_sender;
 
