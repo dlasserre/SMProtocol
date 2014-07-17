@@ -23,12 +23,11 @@ interface hook
      * @param string $input
      * @return mixed
      */
-    public function dispatching($input);
+    public function dispatch($input);
 
     /**
      * @author Damien Lasserre <dlasserre@talend.com>
-     * @param string $input
      * @return mixed
      */
-    public function postDispatch($input);
+    public function postDispatch();
 } 
