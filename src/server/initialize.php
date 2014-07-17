@@ -27,7 +27,7 @@ class initialize
      */
     public function __construct(definition $definition, $_name)
     {
-        if($definition->host and $definition->port and $definition->port) {
+        if($definition->host and $definition->port) {
             $this->_name = $_name;
             /** @var definition _definition */
             $this->_definition = $definition;
