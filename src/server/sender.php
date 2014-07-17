@@ -50,6 +50,7 @@ class sender
                 throw new socket(socket_last_error($this->_socket));
             }
         }
+        SMProtocol::_print('['.$this->_protocol.']'.COLOR_GREEN.' >>> '.strlen($data).' bytes to <'.$this->address.':'.$this->port.'>'.COLOR_WHITE.PHP_EOL);
         /** Return */
         return (True);
     }

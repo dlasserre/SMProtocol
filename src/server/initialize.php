@@ -50,7 +50,6 @@ class initialize
             $this->_definition->socket_type, $this->_definition->socket_protocol);
 
         if($_socket === false) {
-            echo socket_last_error();
             throw new server(socket_last_error());
         }
         /** Binding socket on host and port. */
@@ -60,15 +59,14 @@ class initialize
             /** @var bool $binding */
             $binding = socket_bind($_socket, $this->_definition->host, $this->_definition->port);
             sleep(2);
-            echo $dot."\r";
+            SMProtocol::_print($dot."\r");
         } while($binding <= 0);
-        echo COLOR_WHITE.PHP_EOL;
+        SMProtocol::_print(COLOR_WHITE.PHP_EOL);
         /** Listen socket */
         if(socket_listen($_socket) <= 0) {
-            echo socket_last_error();
             throw new server(socket_last_error($_socket));
         }
-        echo '['.$this->_name.'] '.COLOR_GREEN.'Running success'.COLOR_WHITE.PHP_EOL;
+        SMProtocol::_print('['.$this->_name.'] '.COLOR_GREEN.'Running success'.COLOR_WHITE.PHP_EOL);
         self::$_socket = $_socket;
         /** Return */
         return (true);

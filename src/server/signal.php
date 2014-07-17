@@ -23,7 +23,7 @@ class signal
             foreach(server::$_clients as $client) {
                 if(gettype($client) == 'resource') {
                     socket_getpeername($client, $address, $port);
-                    echo 'closing connection with '.$address.' on port '.$port.PHP_EOL;
+                    SMProtocol::_print('closing connection with '.$address.' on port '.$port.PHP_EOL);
                     socket_close($client);
                 }
             }

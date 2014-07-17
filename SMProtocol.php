@@ -2,6 +2,13 @@
 <?php
 /** Global defined */
 defined('APPLICATION_PATH') || define('APPLICATION_PATH', realpath(__DIR__));
+
+/** Application log */
+defined('LOG_FILE') || define('LOG_FILE', APPLICATION_PATH.'/log/SMProtocol.log');
+defined('LOG_IN_FILE') || define('LOG_IN_FILE', 1);
+defined('LOG_IN_OUTPUT') || define('LOG_IN_OUTPUT', 2);
+defined('LOG_LEVEL') || define('LOG_LEVEL', LOG_IN_FILE | LOG_IN_OUTPUT);
+
 /** Color defined */
 defined('COLOR_GREEN') || define('COLOR_GREEN', "\033[92m");
 defined('COLOR_BLUE') || define('COLOR_BLUE', "\033[94m");

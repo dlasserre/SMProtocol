@@ -80,6 +80,7 @@ class server extends initialize
 
                             if($_data) {
                                 /** @var \hook[] $_hooks */
+                                SMProtocol::_print('['.$_name.']'.COLOR_ORANGE.' <<< '.strlen($_data).' bytes from <'.$_hooks[(string)$socket]->getAddress().':'.$_hooks[(string)$socket]->getPort().'>'.COLOR_WHITE.PHP_EOL);
                                 $_hooks[(string)$socket]->dispatch($_data);
                                 if($_hooks[(string)$socket]->isClosed()) {
                                     /** Call postDispatching hook method */
