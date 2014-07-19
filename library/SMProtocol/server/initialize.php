@@ -50,8 +50,8 @@ class initialize
         $_socket = socket_create($this->_definition->socket_domain,
             $this->_definition->socket_type, $this->_definition->socket_protocol);
 
-        if($_socket === false) {
-            throw new server(socket_last_error());
+        if(false === $_socket) {
+            throw new exception\server(socket_last_error());
         }
         /** Binding socket on host and port. */
         $dot = '['.$this->_name.'] Binding on '.COLOR_BLUE.$this->_definition->host.':'.$this->_definition->port.COLOR_WHITE;

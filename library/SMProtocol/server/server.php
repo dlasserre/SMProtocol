@@ -68,21 +68,24 @@ class server extends initialize
                                 $_hooks[(string)$_client] = $_hook;
 
                                 if($_client <= 0) { /** Exception */
-                                    throw new \engine\exception\server(socket_last_error($_client));
+                                    throw new \library\SMProtocol\exception\server(socket_last_error($_client));
                                 }
                             } else /** Exception */
-                                throw new \engine\exception\server(socket_last_error($_client));
+                                throw new \library\SMProtocol\exception\server(socket_last_error($_client));
                         }
                     } else {
-                        /** @var \hook[] $_hooks */
+                        /** @var hook[] $_hooks */
                         if(!$_hooks[(string)$socket]->isClosed()) {
                             /** @var string $_data */
                             $_data = socket_read($socket, (int)$definition->block_size);
 
                             if($_data) {
-                                /** @var \hook[] $_hooks */
+                                /** @var int $_memory_usage_start */
+                                $_memory_usage_start = memory_get_usage(true);
+                                /** @var hook[] $_hooks */
                                 SMProtocol::_print('['.$_name.']'.COLOR_ORANGE.' <<< '.strlen($_data).' bytes from <'.$_hooks[(string)$socket]->getAddress().':'.$_hooks[(string)$socket]->getPort().'>'.COLOR_WHITE.PHP_EOL);
                                 $_hooks[(string)$socket]->dispatch($_data);
+                                SMProtocol::_print('['.$_name.']'.COLOR_BLUE.' Memory usage <'.(memory_get_usage(true) - $_memory_usage_start).'> bytes allocated'.COLOR_WHITE.PHP_EOL);
                                 if($_hooks[(string)$socket]->isClosed()) {
                                     /** Call postDispatching hook method */
                                     $_hooks[(string)$socket]->postDispatch(null);

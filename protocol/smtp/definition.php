@@ -16,9 +16,6 @@ class definition extends \library\SMProtocol\abstracts\definition
     {
         $this->host = '127.0.0.1';
         $this->port = 4242;
-
-        $this->forward_host = '127.0.0.1';
-        $this->forward_port = 4242;
     }
 
     public function exception(\Exception $exception)
