@@ -241,12 +241,17 @@ class SMProtocol
         if(!$mode) $mode = $_mode;
 
         if($mode == LOG_IN_FILE) {
+            $string = str_replace(array(COLOR_WHITE, COLOR_GREEN, COLOR_ORANGE, COLOR_RED, COLOR_BLUE), '', $string);
+            $string = '['.date('m-d-Y H:i:s').']: '.$string;
+            $string .=
             file_put_contents(LOG_FILE, $string, FILE_APPEND);
         } else if ($mode == LOG_IN_OUTPUT) {
             echo $string;
         } else if($mode === (LOG_IN_FILE | LOG_IN_OUTPUT)) {
-            file_put_contents(LOG_FILE, $string, FILE_APPEND);
             echo $string;
+            $string = str_replace(array(COLOR_WHITE, COLOR_GREEN, COLOR_ORANGE, COLOR_RED, COLOR_BLUE), '', $string);
+            $string = '['.date('m-d-Y H:i:s').']: '.$string;
+            file_put_contents(LOG_FILE, $string, FILE_APPEND);
         }
     }
 }
