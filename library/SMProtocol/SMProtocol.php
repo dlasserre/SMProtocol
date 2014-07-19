@@ -1,12 +1,12 @@
 <?php
 /** Namespace engine */
-namespace engine;
+namespace library\SMProtocol;
 /** Namespace usage */
-use engine\exception\client;
-use engine\exception\server;
-use engine\exception\socket;
-use engine\server\signal;
-use protocol\definition;
+use library\SMProtocol\abstracts\hook;
+use library\SMProtocol\exception\client;
+use library\SMProtocol\exception\server;
+use library\SMProtocol\server\signal;
+use library\SMProtocol\abstracts\definition;
 
 /**
  * Class SMProtocol
@@ -25,8 +25,8 @@ class SMProtocol
      */
     public function __construct()
     {
-        pcntl_signal(SIGINT, array('\engine\server\signal', 'handleSMP'));
-        pcntl_signal(SIGTERM, array('\engine\server\signal', 'handleSMP'));
+        pcntl_signal(SIGINT, array('library\SMProtocol\server\signal', 'handleSMP'));
+        pcntl_signal(SIGTERM, array('library\SMProtocol\server\signal', 'handleSMP'));
         pcntl_signal(SIGHUP, array($this, 'restart'));
         self::$_pid = posix_getpid();
         $this->launchProtocols();
@@ -35,14 +35,14 @@ class SMProtocol
     /**
      * @author Damien Lasserre <damien.lasserre@gmail.com>
      * @param string $_protocol
-     * @return bool
      * @throws exception\SMProtocol
+     * @return bool
      */
     protected function launchProtocols($_protocol = '*')
     {
         /** @var resource $_dir */
         $_dir = opendir(APPLICATION_PATH.'/protocol/');
-        /** @var \src\interfaces\hook $_hooks */
+        /** @var hook $_hooks */
         $_hook = null;
         /** @var array $_exclude_files */
         $_exclude_files = array('interfaces', 'hook.php', 'definition.php', '.', '..');
@@ -63,14 +63,14 @@ class SMProtocol
                         /** @var string $_class */
                         $_class = '\protocol\\'.$directory.'\definition';
                         SMProtocol::_print('['.$directory.'] '.COLOR_ORANGE.'Starting...'.COLOR_WHITE.PHP_EOL);
-                        /** @var \src\interfaces\hook $_hook */
+                        /** @var hook $_hook */
                         $this->loadHook($directory);
                         try {
                             /** @var int $pid */
                             $pid = pcntl_fork();
                             if($pid < 0) {
                                 /** @noinspection PhpUnnecessaryFullyQualifiedNameInspection */
-                                throw new \engine\exception\SMProtocol('Impossible to fork protocol server');
+                                throw new \library\SMProtocol\exception\SMProtocol('Impossible to fork protocol server');
                             } else if($pid) {
                                 posix_setsid(); // session chief
                                 /** increment array of process */
@@ -81,7 +81,7 @@ class SMProtocol
                                 /** Just for waiting binding and print information in output. */
                                 sleep(3);
                             } else { // Child process
-                                /** @var \src\abstracts\definition $_instance */
+                                /** @var definition $_instance */
                                 $_instance = new $_class();
                                 if(!$this->rootPrivilege($_instance->port)) {
                                     SMProtocol::_print(COLOR_RED.$directory.' Stopped...'.COLOR_WHITE.PHP_EOL);
@@ -91,7 +91,7 @@ class SMProtocol
                                 SMProtocol::_print('['.$directory.'] '.COLOR_GREEN.'Success:'.COLOR_WHITE.' detached with pid <'.COLOR_BLUE.posix_getpid().COLOR_WHITE.'>, parent pid <'.COLOR_BLUE.posix_getppid().COLOR_WHITE.'>'.PHP_EOL);
                                 SMProtocol::_print(PHP_EOL);
                                 /** @noinspection PhpUnnecessaryFullyQualifiedNameInspection */
-                                new \engine\server\server($_instance, $directory);
+                                new \library\SMProtocol\server\server($_instance, $directory);
                                 exit;
                             }
                         } catch(server $server) {
@@ -104,11 +104,6 @@ class SMProtocol
                             if(isset($_instance) and method_exists($_instance, '_exception'))
                                 $_instance->_exception($client->getMessage());
                             else SMProtocol::_print($client->getMessage());
-                        }catch(socket $socket ) {
-                            /** Catch socket exceptions */
-                            if(isset($_instance) and method_exists($_instance, '_exception'))
-                                $_instance->_exception($socket->getMessage());
-                            else SMProtocol::_print($socket->getMessage());
                         }
 
                     } else if(!in_array($file, $_exclude_files)) {
@@ -141,11 +136,11 @@ class SMProtocol
     /**
      * @author Damien Lasserre <damien.lasserre@gmail.com>
      * @param $_protocol
-     * @return null|\src\interfaces\hook
+     * @return null|hook
      */
     protected function loadHook($_protocol)
     {
-        /** @var \src\interfaces\hook $_hook */
+        /** @var hook $_hook */
         $_hook = null;
         /** @var string $hook */
         $_hook_path = APPLICATION_PATH.'/protocol/'.$_protocol.'/hook.php';
@@ -156,12 +151,12 @@ class SMProtocol
         if(is_file($_hook_path)) {
             /** @noinspection PhpIncludeInspection */
             require_once($_hook_path);
-            /** @var \src\interfaces\hook $_hook */
+            /** @var hook $_hook */
             $_hook = new $_class_hook();
             /** @var array $_interfaces */
             $_interfaces = class_implements($_hook);
 
-            if(!array_key_exists('src\interfaces\hook', $_interfaces)) {
+            if(!array_key_exists('library\SMProtocol\interfaces\hook', $_interfaces)) {
                 SMProtocol::_print(COLOR_RED.'['.$_protocol.'] Fail Hook not implement hook interface, hook not loaded'.COLOR_WHITE.PHP_EOL);
                 /** @var null $_hook */
                 $_hook = null;
@@ -230,7 +225,7 @@ class SMProtocol
                 unset(self::$_servers[$pid]);
                 $this->launchProtocols($_copy['protocol']);
             } else /** @noinspection PhpUnnecessaryFullyQualifiedNameInspection */
-                throw new \engine\exception\SMProtocol('Impossible to restart service ['.$pid.']');
+                throw new \library\SMProtocol\exception\SMProtocol('Impossible to restart service ['.$pid.']');
         }
     }
 

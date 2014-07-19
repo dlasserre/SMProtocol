@@ -1,6 +1,6 @@
 <?php
 /** Namespace protocol\interfaces */
-namespace src\interfaces;
+namespace library\SMProtocol\interfaces;
 
 /**
  * Interface interpret

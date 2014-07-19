@@ -1,6 +1,6 @@
 <?php
 /** Namespace */
-namespace engine\exception;
+namespace library\SMProtocol\exception;
 /**
  * Class socket
  * @author Damien Lasserre <damien.lasserre@gmail.com>

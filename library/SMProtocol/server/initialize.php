@@ -1,9 +1,9 @@
 <?php
 /** Namespace engine\server */
-namespace engine\server;
-use engine\exception\server;
-use engine\SMProtocol;
-use src\abstracts\definition;
+namespace library\SMProtocol\server;
+use library\SMProtocol\exception;
+use library\SMProtocol\SMProtocol;
+use library\SMProtocol\interfaces\definition;
 
 /**
  * Class initialize
@@ -21,28 +21,28 @@ class initialize
 
     /**
      * @author Damien Lasserre <damien.lasserre@gmail.com>
-     * @param \src\abstracts\definition $definition
+     * @param \library\SMProtocol\abstracts\definition|\library\SMProtocol\interfaces\definition $definition
      * @param $_name
-     * @throws \engine\exception\server
+     * @throws \library\SMProtocol\exception\server
      * @internal param string $name
      */
-    public function __construct(\src\abstracts\definition $definition, $_name)
+    public function __construct(\library\SMProtocol\abstracts\definition $definition, $_name)
     {
         if($definition->host and $definition->port) {
             $this->_name = $_name;
-            /** @var \src\abstracts\definition _definition */
+            /** @var \library\SMProtocol\abstracts\definition _definition */
             $this->_definition = $definition;
             if($this->_initSocket())
                 /** Return */
                 return (true);
-        } else throw new server();
+        } else throw new exception\server();
         /** Return */
         return (false);
     }
 
     /**
      * @author Damien Lasserre <damien.lasserre@gmail.com>
-     * @throws \engine\exception\server
+     * @throws exception\server
      */
     private function _initSocket()
     {
@@ -65,7 +65,7 @@ class initialize
         SMProtocol::_print(COLOR_WHITE.PHP_EOL);
         /** Listen socket */
         if(socket_listen($_socket) <= 0) {
-            throw new server(socket_last_error($_socket));
+            throw new exception\server(socket_last_error($_socket));
         }
         SMProtocol::_print('['.$this->_name.'] '.COLOR_GREEN.'Running success'.COLOR_WHITE.PHP_EOL);
         self::$_socket = $_socket;

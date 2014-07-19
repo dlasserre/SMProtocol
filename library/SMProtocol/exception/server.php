@@ -1,6 +1,6 @@
 <?php
 /** Namespace engine\exception */
-namespace engine\exception;
+namespace library\SMProtocol\exception;
 
 /**
  * Class server

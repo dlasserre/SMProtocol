@@ -1,10 +1,10 @@
 <?php
 /** Namespace */
-namespace engine\server;
+namespace library\SMProtocol\engine\server;
 /** Use */
-use engine\exception\socket;
-use engine\SMProtocol;
-use protocol\definition;
+use library\SMProtocol\exception\socket;
+use library\SMProtocol\SMProtocol;
+use library\SMProtocol\abstracts\definition;
 
 /**
  * Class sender
@@ -29,7 +29,7 @@ class sender
      * @param string $_protocol
      * @param $definition $definition
      */
-    public function __construct($_socket, \src\abstracts\definition $definition, $_protocol)
+    public function __construct($_socket, definition $definition, $_protocol)
     {
         socket_getpeername($_socket, $this->address, $this->port);
         $this->close = False;
@@ -42,8 +42,8 @@ class sender
     /**
      * @author Damien Lasserre <dlasserre@talend.com>
      * @param string $data
+     * @throws \library\SMProtocol\exception\socket
      * @return bool
-     * @throws \engine\exception\socket
      */
     public function send($data)
     {
@@ -58,16 +58,6 @@ class sender
         SMProtocol::_print('['.$this->_protocol.']'.COLOR_GREEN.' >>> '.strlen($data).' bytes to <'.$this->address.':'.$this->port.'>'.COLOR_WHITE.PHP_EOL);
         /** Return */
         return (True);
-    }
-
-    /**
-     * @author Damien Lasserre <dlasserre@talend.com>
-     * @param $entry
-     * @param $response
-     */
-    public function forward($entry, $response)
-    {
-
     }
 
     /**

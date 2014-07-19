@@ -1,9 +1,10 @@
 <?php
 /** Namespace engine / server */
-namespace engine\server;
-use engine\SMProtocol;
-use protocol\definition;
-use protocol\interfaces\hook;
+namespace library\SMProtocol\server;
+use library\SMProtocol\abstracts\hook;
+use library\SMProtocol\engine\server\sender;
+use library\SMProtocol\SMProtocol;
+use library\SMProtocol\abstracts\definition;
 
 /**
  * Class server
@@ -23,12 +24,11 @@ class server extends initialize
 
     /**
      * @author Damien Lasserre <damien.lasserre@gmail.com>
-     * @param \src\abstracts\definition $definition
+     * @param definition $definition
      * @param string $_name
-     * @throws \engine\exception\server
-     * @throws \engine\exception\client
+     * @throws \library\SMProtocol\exception\server
      */
-    public function __construct(\src\abstracts\definition $definition, $_name)
+    public function __construct(definition $definition, $_name)
     {
         pcntl_signal(SIGINT, array($this, 'kill'));
 
@@ -60,7 +60,7 @@ class server extends initialize
                                 self::$_clients[] = $_client;
                                 /** @var string $_hook_class */
                                 $_hook_class = $this->_name.'\hook';
-                                /** @var \src\interfaces\hook $_hook */
+                                /** @var hook $_hook */
                                 $_hook = new $_hook_class(new sender($_client, $definition, $_name));
                                 socket_getpeername($_client, $address, $port);
                                 /** Call preDispatching hook method */
@@ -127,6 +127,7 @@ class server extends initialize
         declare(ticks = 1);
         /** Close socket */
         parent::close();
+
         exit($sig);
     }
 }

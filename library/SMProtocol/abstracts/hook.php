@@ -1,12 +1,16 @@
 <?php
+/** Namespace */
+namespace library\SMProtocol\abstracts;
+/** Usage */
+use library\SMProtocol\engine\server\sender;
 /**
  * Class hook
  */
-abstract class hook implements src\interfaces\hook
+abstract class hook implements \library\SMProtocol\interfaces\hook
 {
     private $_sender;
 
-    public function __construct(\engine\server\sender $sender = null)
+    public function __construct(sender $sender = null)
     {
         $this->_sender = $sender;
     }

@@ -2,7 +2,7 @@
 /**
  * @author Damien Lasserre <dlasserre@talend.com>
  */
-namespace src\interfaces;
+namespace library\SMProtocol\interfaces;
 /**
  * Interface hook
  * @author Damien Lasserre <dlasserre@talend.com>

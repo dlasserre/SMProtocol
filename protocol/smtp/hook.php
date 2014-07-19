@@ -1,13 +1,14 @@
 <?php
 /** Namespace */
 namespace smtp;
+use smtp\internal\parse;
 
 /**
  * Class smtp
  * @author Damien Lasserre <damien.lasserre@gmail.com>
  * @package hook
  */
-class hook extends \hook
+class hook extends \library\SMProtocol\abstracts\hook
 {
     /** @var  string $_from */
     protected $_from;

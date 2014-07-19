@@ -2,6 +2,7 @@
 <?php
 /** Global defined */
 defined('APPLICATION_PATH') || define('APPLICATION_PATH', realpath(__DIR__));
+defined('SMProtocol_PATH') || define('SMProtocol_PATH', APPLICATION_PATH.'/library/SMProtocol');
 
 /** Application log */
 defined('LOG_FILE') || define('LOG_FILE', APPLICATION_PATH.'/log/SMProtocol.log');
@@ -17,25 +18,25 @@ defined('COLOR_RED') || define('COLOR_RED', "\033[91m");
 defined('COLOR_WHITE') || define('COLOR_WHITE', "\033[0m");
 
 /** Require interface and extended class */
-require_once(APPLICATION_PATH.'/src/interfaces/hook.php');
-require_once(APPLICATION_PATH.'/src/server/sender.php');
-require_once(APPLICATION_PATH . '/src/abstracts/hook.php');
-require_once(APPLICATION_PATH.'/src/interfaces/definition.php');
-require_once(APPLICATION_PATH . '/src/abstracts/definition.php');
+require_once(SMProtocol_PATH.'/interfaces/hook.php');
+require_once(SMProtocol_PATH.'/server/sender.php');
+require_once(SMProtocol_PATH . '/abstracts/hook.php');
+require_once(SMProtocol_PATH.'/interfaces/definition.php');
+require_once(SMProtocol_PATH . '/abstracts/definition.php');
 
 /** Require_exception files */
-require_once(APPLICATION_PATH.'/src/exception/SMProtocol.php');
-require_once(APPLICATION_PATH.'/src/exception/server.php');
-require_once(APPLICATION_PATH.'/src/exception/client.php');
-require_once(APPLICATION_PATH.'/src/exception/socket.php');
+require_once(SMProtocol_PATH.'/exception/SMProtocol.php');
+require_once(SMProtocol_PATH.'/exception/server.php');
+require_once(SMProtocol_PATH.'/exception/client.php');
+require_once(SMProtocol_PATH.'/exception/socket.php');
 
 /** Require server, socket, signal files */
-require_once(APPLICATION_PATH.'/src/server/signal.php');
-require_once(APPLICATION_PATH.'/src/server/initialize.php');
-require_once(APPLICATION_PATH.'/src/server/server.php');
+require_once(SMProtocol_PATH.'/server/signal.php');
+require_once(SMProtocol_PATH.'/server/initialize.php');
+require_once(SMProtocol_PATH.'/server/server.php');
 
 /** Bootstrap application */
 /** including all protocols in protocol directory */
-require_once(APPLICATION_PATH.'/src/SMProtocol.php');
+require_once(SMProtocol_PATH.'/SMProtocol.php');
 
-new \engine\SMProtocol();
+new \library\SMProtocol\SMProtocol();

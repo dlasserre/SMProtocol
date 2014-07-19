@@ -1,7 +1,7 @@
 <?php
 /** Namespace engine\server */
-namespace engine\server;
-use engine\SMProtocol;
+namespace library\SMProtocol\server;
+use library\SMProtocol\SMProtocol;
 
 /**
  * Class signal
@@ -13,7 +13,7 @@ class signal
     /**
      * @author Damien Lasserre <damien.lasserre@gmail.com>
      */
-    public static function handler($sig)
+    public static function handler()
     {
         /** Require since PHP 4.3.0 */
         declare(ticks = 1);

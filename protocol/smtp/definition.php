@@ -7,7 +7,7 @@ namespace protocol\smtp;
  * @author Damien Lasserre <damien.lasserre@gmail.com>
  * @package protocol\smtp
  */
-class definition extends \src\abstracts\definition
+class definition extends \library\SMProtocol\abstracts\definition
 {
     /**
      * @author Damien Lasserre <damien.lasserre@gmail.com>
