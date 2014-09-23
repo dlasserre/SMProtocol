@@ -1,6 +1,7 @@
 <?php
 /** Namespace engine\server */
 namespace library\SMProtocol\server;
+use library\SMProtocol\cleanup;
 use library\SMProtocol\exception;
 use library\SMProtocol\SMProtocol;
 use library\SMProtocol\interfaces\definition;
@@ -10,7 +11,7 @@ use library\SMProtocol\interfaces\definition;
  * @author Damien Lasserre <damien.lasserre@gmail.com>
  * @package engine\server
  */
-class initialize
+class initialize extends cleanup
 {
     /** @var  definition $_definition */
     protected $_definition;
@@ -58,9 +59,12 @@ class initialize
         do {
             $dot .= '.';
             /** @var bool $binding */
-            $binding = socket_bind($_socket, $this->_definition->host, $this->_definition->port);
+            $binding = @socket_bind($_socket, $this->_definition->host, $this->_definition->port);
             sleep(2);
             SMProtocol::_print($dot."\r");
+            if(socket_last_error($_socket)) {
+                continue;
+            }
         } while($binding <= 0);
         SMProtocol::_print(COLOR_WHITE.PHP_EOL);
         /** Listen socket */
@@ -80,5 +84,15 @@ class initialize
     {
         if(gettype(self::$_socket) == 'resource')
             socket_close(self::$_socket);
+    }
+
+    public function _cleanup($class)
+    {
+        parent::_cleanup($class);
+    }
+
+    public function __destruct()
+    {
+        parent::_cleanup(__CLASS__);
     }
 } 

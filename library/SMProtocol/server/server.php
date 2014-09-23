@@ -1,11 +1,11 @@
 <?php
 /** Namespace engine / server */
 namespace library\SMProtocol\server;
+/** Usages */
 use library\SMProtocol\abstracts\hook;
 use library\SMProtocol\engine\server\sender;
 use library\SMProtocol\SMProtocol;
 use library\SMProtocol\abstracts\definition;
-
 /**
  * Class server
  * @author Damien Lasserre <damien.lasserre@gmail.com>
@@ -15,12 +15,17 @@ class server extends initialize
 {
     /** @var  bool $__server_listening */
     public static $__server_listening;
-    /** @var  array $_clients */
-    public static $_clients;
-    /** @var array array */
-    protected $_streams;
     /** @var  string $_name */
     protected $_name;
+    /** @var  resource[] $_clients */
+    public $_clients;
+    /** @var  hook[] $_hooks */
+    protected $_hooks;
+
+    /** @var  bool $_accept */
+    protected $_accept = True;
+    /** @var  \download[] $_downloads */
+    protected $_downloads;
 
     /**
      * @author Damien Lasserre <damien.lasserre@gmail.com>
@@ -30,107 +35,164 @@ class server extends initialize
      */
     public function __construct(definition $definition, $_name)
     {
-        pcntl_signal(SIGINT, array($this, 'kill'));
+        /** tick for received signal from children */
+        declare(ticks=1);
 
+        /** For defunct process */
+        pcntl_signal(SIGCHLD, SIG_IGN);
         if(false !== parent::__construct($definition, $_name)) {
             /** protocol name */
             $this->_name = $_name;
-            /** @var array $_streams */
-            $this->_streams = array(parent::$_socket);
-            /** @var array $_hooks */
-            $_hooks = array();
+            /** @var \pid $pid */
+            $pid = new \pid(posix_getppid(), posix_getpid());
+            /** @var mixed $_pid */
+            $_pid = null;
 
-            for(;;)
-            {
-                /** @var array $_streams */
-                $_streams = array_merge((array)self::$_clients, $this->_streams);
-
-                if(@socket_select($_streams, $_write = array(), $expect = null, null) < 1) {
-                    continue;
+            /** While socket is alive */
+            for(;;) {
+                /** If you want to change max connection by process, please use definition file in your protocol. */
+                if(count($this->_clients) == $definition->max_connection
+                    and $_pid === null) {
+                    SMProtocol::_print('['.$this->_name.'] Children born'.PHP_EOL);
+                    /** @var int $_pid */
+                    $_pid = pcntl_fork();
                 }
-
-                foreach($_streams as $socket) {
-                    if(in_array(parent::$_socket, $_streams)) {
-                        /** New connection */
-                        if($socket === parent::$_socket) {
+                /** Parent process */
+                if($_pid and $_pid !== null) {
+                    /** Parent close accepted connection */
+                    pcntl_waitpid(-1, $status, WNOHANG);
+                    SMProtocol::_print('['.$this->_name.'] Parent restart all connections <'.posix_getpid().'>...'.PHP_EOL);
+                    $this->_clients = null;
+                    /** @var mixed $_pid */
+                    $_pid = null;
+                } else if(!$_pid or $_pid === null){
+                    if(0 === $_pid) {
+                        /** Children process */
+                        $this->_accept = False;
+                        if (!count($this->_clients))
+                            break;
+                    }
+                    /** @var array $_reads */
+                    $_reads = array(parent::$_socket);
+                    if(is_array($this->_clients))
+                        $_reads = array_merge($_reads, $this->_clients);
+                    /** @var array $_write */
+                    $_write = $_reads;
+                    // Unset parent in socket write, only ready in I/O input...
+                    // all other socket maybe potential write or read.
+                    unset($_write[(string)parent::$_socket]);
+                    if (@socket_select($_reads, $_write, $_except = null, null) < 1) {
+                        continue;
+                    }
+                    /** @var array $_reads */
+                    $_reads = array_merge($_reads, $_write);
+                    /** @var resource $read */
+                    foreach ($_reads as $read) {
+                        // SERVER
+                        // If socket is parent, accept connection
+                        if ($read === parent::$_socket) {
                             /** @var resource $_client */
                             $_client = socket_accept(parent::$_socket);
-
-                            if($_client > 0) {
-                                self::$_clients[] = $_client;
-                                /** @var string $_hook_class */
-                                $_hook_class = $this->_name.'\hook';
-                                /** @var hook $_hook */
-                                $_hook = new $_hook_class(new sender($_client, $definition, $_name));
-                                socket_getpeername($_client, $address, $port);
-                                /** Call preDispatching hook method */
-                                $_hook->preDispatch($address, $port);
-                                $_hooks[(string)$_client] = $_hook;
-
-                                if($_client <= 0) { /** Exception */
-                                    throw new \library\SMProtocol\exception\server(socket_last_error($_client));
+                            socket_getpeername($_client, $address, $port);
+                            if ($_client <= 0) {
+                                /** Exception */
+                                SMProtocol::_print('[SMProtocol]: ' . COLOR_RED . socket_last_error($_client) . COLOR_WHITE . PHP_EOL);
+                            }
+                            if ($_client > 0) {
+                                // If ok to accept connection
+                                if($this->_accept) {
+                                    $this->_clients[(string)$_client] = $_client;
+                                    /** @var string $_hook_class */
+                                    $_hook_class = $this->_name . '\hook';
+                                    $this->_hooks[(string)$_client] = new $_hook_class(new sender($_client, $definition, $_name));
+                                    /** Call preDispatching hook method */
+                                    $this->_hooks[(string)$_client]->preDispatch($address, $port);
+                                } else {
+                                    SMProtocol::_print('['.$this->_name.'] '.COLOR_RED.'Socket refused, because process turned accept FALSE'.COLOR_WHITE.PHP_EOL);
+                                    /** Close connection refused on, this process is full working. */
+                                    socket_close($_client);
                                 }
-                            } else /** Exception */
-                                throw new \library\SMProtocol\exception\server(socket_last_error($_client));
-                        }
-                    } else {
-                        /** @var hook[] $_hooks */
-                        if(!$_hooks[(string)$socket]->isClosed()) {
-                            /** @var string $_data */
-                            $_data = socket_read($socket, (int)$definition->block_size);
-
-                            if($_data) {
-                                /** @var int $_memory_usage_start */
-                                $_memory_usage_start = memory_get_usage(true);
-                                /** @var hook[] $_hooks */
-                                SMProtocol::_print('['.$_name.']'.COLOR_ORANGE.' <<< '.strlen($_data).' bytes from <'.$_hooks[(string)$socket]->getAddress().':'.$_hooks[(string)$socket]->getPort().'>'.COLOR_WHITE.PHP_EOL);
-                                $_hooks[(string)$socket]->dispatch($_data);
-                                SMProtocol::_print('['.$_name.']'.COLOR_BLUE.' Memory usage <'.(memory_get_usage(true) - $_memory_usage_start).'> bytes allocated'.COLOR_WHITE.PHP_EOL);
-                                if($_hooks[(string)$socket]->isClosed()) {
-                                    /** Call postDispatching hook method */
-                                    $_hooks[(string)$socket]->postDispatch(null);
-                                    /** remove from client stack */
-                                    unset(self::$_clients[(string)$socket]);
+                            }
+                            // CLIENT
+                        } else {
+                            // Call dispatch method from hook protocol
+                            $this->_hooks[(string)$read]->dispatch();
+                            /** If an error occurred, close connection with the client */
+                            if(0 !== socket_last_error($read) or $this->_hooks[(string)$read]->isClosed()) {
+                                $this->_hooks[(string)$read]->postDispatch(null);
+                                SMProtocol::_print('[' . $_name . '] ' . COLOR_RED . 'Connected closed with message "' . $this->_hooks[(string)$read]->getErrorMessage($this->_hooks[(string)$read]->getLastErrorCode()) . '"' . COLOR_WHITE . PHP_EOL);
+                                if (gc_enabled()) {
+                                    /** @var int $_cycle */
+                                    $_cycle = gc_collect_cycles();
+                                    $pid->nb_garbage_collector_cycle = $_cycle;
+                                    SMProtocol::_print('[' . $_name . ']' . COLOR_BLUE . 'Garbage Collector:' . COLOR_GREEN . ' Number of cycle collected < ' . COLOR_WHITE . $_cycle . COLOR_GREEN . ' >' . COLOR_WHITE . PHP_EOL);
                                 }
+                                // Process defunct (work in progress for this stat)
+                                $pid->defunct = false;
+                                if(in_array($this->_hooks[(string)$read]->getDownload()->http_response, array(200, 206))) {
+                                    SMProtocol::_print('[' . $this->_name . '] ' . COLOR_ORANGE . 'Save download(s) tracker in database.' . COLOR_WHITE . PHP_EOL);
+                                    $this->_hooks[(string)$read]->getDownload()->setPid($pid);
+                                    if($_pid !== null) {
+                                        $this->_downloads[] = $this->_hooks[(string)$read]->getDownload();
+                                        SMProtocol::_print('[' . $this->_name . '] ' . COLOR_ORANGE . 'Stored download(s) completed.' . COLOR_WHITE . PHP_EOL);
+                                    } else {
+                                        SMProtocol::_print('['.$this->_name.'] '.COLOR_RED.'Connection with all clients was terminated and closed, now save stats in database.'.COLOR_WHITE.PHP_EOL);
+                                        $this->saveDownload($this->_hooks[(string)$read]->getDownload());
+                                    }
+                                }
+                                /** close socket, work finish */
+                                socket_close($read);
+                                unset($this->_clients[(string)$read]);
+                                unset($this->_hooks[(string)$read]);
                             }
                         }
                     }
                 }
             }
         }
-    }
-
-    /**
-     * @author Damien Lasserre <damien.lasserre@gmail.com>
-     */
-    public function kill()
-    {
-        declare(ticks=1);
-
-        if(is_array(self::$_clients)) {
-            foreach(self::$_clients as $client) {
-                if(is_resource($client)) {
-                    socket_close($client);
-                }
+        SMProtocol::_print('['.$this->_name.'] '.COLOR_RED.'Connection with all clients was terminated and closed, now save stats in database.'.COLOR_WHITE.PHP_EOL);
+        // Save download after all transactions !
+        foreach($this->_downloads as $key => $download) {
+            if(in_array($download->http_response, array(200, 206)))
+                $this->saveDownload($download);
+            else {
+                SMProtocol::_print('['.$this->_name.'] '.COLOR_RED.' Download not save because HTTP code is '.$download->http_response.COLOR_WHITE.PHP_EOL);
+                unset($this->_downloads[$key]);
             }
         }
-        if(is_resource(parent::$_socket))
-            socket_close(parent::$_socket);
-
-        /** Close child */
+        /** Killing children, if are here your must children process, the parent process never wipe */
+        SMProtocol::_print('['.$this->_name.'] Children <'.posix_getpid().'> wipe'.PHP_EOL);
+        /** Sure to send a good signal */
+        posix_kill(posix_getpid(), SIGCHLD);
+        /** exit */
         exit(SIGCHLD);
     }
 
     /**
      * @author Damien Lasserre <damien.lasserre@gmail.com>
+     * @param \download $download
+     * @return void
      */
-    public function restart($sig)
+    protected function saveDownload(\download $download)
     {
-        /** Require since PHP 4.3.0 */
-        declare(ticks = 1);
-        /** Close socket */
-        parent::close();
+        /** Save all debug during transaction with the server, just for precaution :D */
+        foreach(SMProtocol::$_debugs as $debug) {
+            $download->addDebug(new \debug($debug));
+        }
+        if($download->save()) {
+            SMProtocol::_print('['.$this->_name.'] '.COLOR_GREEN.'Save download  completed.'.COLOR_WHITE.PHP_EOL);
+        } else {
+            SMProtocol::_print('['.$this->_name.'] '.COLOR_RED.'Save download fail...'.COLOR_WHITE.PHP_EOL);
+        }
+    }
 
-        exit($sig);
+    /**
+     * @author Damien Lasserre <damien.lasserre@gmail.com>
+     * @return void
+     */
+    public function __destruct()
+    {
+        /** Cleanup all memory usage */
+        parent::_cleanup(__CLASS__);
     }
 }

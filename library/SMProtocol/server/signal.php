@@ -18,16 +18,6 @@ class signal
         /** Require since PHP 4.3.0 */
         declare(ticks = 1);
 
-        /** module mixing */
-        if(is_array(server::$_clients)) {
-            foreach(server::$_clients as $client) {
-                if(gettype($client) == 'resource') {
-                    socket_getpeername($client, $address, $port);
-                    SMProtocol::_print('closing connection with '.$address.' on port '.$port.PHP_EOL);
-                    socket_close($client);
-                }
-            }
-        }
         /** Close server socket */
         initialize::close();
     }
@@ -49,7 +39,7 @@ class signal
                 self::_sigTerm();
                 break;
             case SIGCHLD:
-                self::_sigChld();
+                self::_sigKill();
                 break;
             case SIGHUP:
                 self::_sigHup();

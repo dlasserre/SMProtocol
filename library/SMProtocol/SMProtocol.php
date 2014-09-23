@@ -3,6 +3,7 @@
 namespace library\SMProtocol;
 /** Namespace usage */
 use library\SMProtocol\abstracts\hook;
+use library\SMProtocol\engine\server\sender;
 use library\SMProtocol\exception\client;
 use library\SMProtocol\exception\server;
 use library\SMProtocol\server\signal;
@@ -13,12 +14,14 @@ use library\SMProtocol\abstracts\definition;
  * @author Damien Lasserre <damien.lasserre@gmail.com>
  * @package engine
  */
-class SMProtocol
+class SMProtocol extends cleanup
 {
     /** @var  array $_servers */
     public static $_servers;
     /** @var  int $_pid */
     public static $_pid;
+    /** @var  string[] $_debugs */
+    public static $_debugs;
 
     /**
      * @author Damien Lasserre <damien.lasserre@gmail.com>
@@ -27,6 +30,7 @@ class SMProtocol
     {
         pcntl_signal(SIGINT, array('library\SMProtocol\server\signal', 'handleSMP'));
         pcntl_signal(SIGTERM, array('library\SMProtocol\server\signal', 'handleSMP'));
+        pcntl_signal(SIGCHLD, array('library\SMProtocol\server\signal', 'handleSMP'));
         pcntl_signal(SIGHUP, array($this, 'restart'));
         self::$_pid = posix_getpid();
         $this->launchProtocols();
@@ -45,7 +49,9 @@ class SMProtocol
         /** @var hook $_hooks */
         $_hook = null;
         /** @var array $_exclude_files */
-        $_exclude_files = array('interfaces', 'hook.php', 'definition.php', '.', '..');
+        $_exclude_files = array('interfaces', 'hook.php', 'definition.php', '.', '..', 'plugins');
+        /** @var int $_childs */
+        $_childs = 1;
 
         include('header.txt');
         /** @var string $directory */
@@ -78,6 +84,17 @@ class SMProtocol
                                     'protocol' => $directory,
                                     'start' => mktime()
                                 );
+                                if(!gc_enabled()) {
+                                    SMProtocol::_print('['.$directory.'] '.COLOR_ORANGE.'Garbage Collector was not enabled...'.COLOR_WHITE.PHP_EOL);
+                                    if(version_compare(PHP_VERSION, '5.3.0') >= 0) {
+                                        SMProtocol::_print('['.$directory.'] '.COLOR_BLUE.'Enabled Garbage Collector'.COLOR_WHITE.PHP_EOL);
+                                        gc_enable();
+                                    } else {
+                                        SMProtocol::_print('['.$directory.'] '.COLOR_ORANGE.'Your PHP_VERSION not implement Garbage collector...'.COLOR_WHITE.PHP_EOL);
+                                    }
+                                } else {
+                                    SMProtocol::_print('['.$directory.'] '.COLOR_ORANGE.'Garbage Collector...'.COLOR_GREEN.'OK'.COLOR_WHITE.PHP_EOL);
+                                }
                                 /** Just for waiting binding and print information in output. */
                                 sleep(3);
                             } else { // Child process
@@ -90,7 +107,6 @@ class SMProtocol
                                 }
                                 SMProtocol::_print('['.$directory.'] '.COLOR_GREEN.'Success:'.COLOR_WHITE.' detached with pid <'.COLOR_BLUE.posix_getpid().COLOR_WHITE.'>, parent pid <'.COLOR_BLUE.posix_getppid().COLOR_WHITE.'>'.PHP_EOL);
                                 SMProtocol::_print(PHP_EOL);
-                                /** @noinspection PhpUnnecessaryFullyQualifiedNameInspection */
                                 new \library\SMProtocol\server\server($_instance, $directory);
                                 exit;
                             }
@@ -239,11 +255,11 @@ class SMProtocol
         static $mode;
 
         if(!$mode) $mode = $_mode;
-
+        /** store debug */
+        self::$_debugs[] = $string;
         if($mode == LOG_IN_FILE) {
             $string = str_replace(array(COLOR_WHITE, COLOR_GREEN, COLOR_ORANGE, COLOR_RED, COLOR_BLUE), '', $string);
             $string = '['.date('m-d-Y H:i:s').']: '.$string;
-            $string .=
             file_put_contents(LOG_FILE, $string, FILE_APPEND);
         } else if ($mode == LOG_IN_OUTPUT) {
             echo $string;
@@ -253,5 +269,13 @@ class SMProtocol
             $string = '['.date('m-d-Y H:i:s').']: '.$string;
             file_put_contents(LOG_FILE, $string, FILE_APPEND);
         }
+    }
+
+    /**
+     * @author Damien Lasserre <damien.lasserre@gmail.com>
+     */
+    public function __destruct()
+    {
+        parent::_cleanup(__CLASS__);
     }
 }

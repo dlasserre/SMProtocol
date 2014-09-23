@@ -11,7 +11,7 @@ abstract class definition extends \stdClass implements \library\SMProtocol\inter
     public $host;
     /** if port < 1024, must run server with root privilege */
     public $port;
-    public $max_connection;
+    public $max_connection = 2;
     public $block_size = 512;
 
     public $forward_host;
@@ -20,6 +20,11 @@ abstract class definition extends \stdClass implements \library\SMProtocol\inter
     public $socket_domain = AF_INET;
     public $socket_type = SOCK_STREAM;
     public $socket_protocol = SOL_TCP;
+
+    public function __construct(array $configuration)
+    {
+
+    }
 
     public function __destruct()
     {

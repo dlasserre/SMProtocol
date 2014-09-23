@@ -20,10 +20,9 @@ interface hook
 
     /**
      * @author Damien Lasserre <dlasserre@talend.com>
-     * @param string $input
      * @return mixed
      */
-    public function dispatch($input);
+    public function dispatch();
 
     /**
      * @author Damien Lasserre <dlasserre@talend.com>
