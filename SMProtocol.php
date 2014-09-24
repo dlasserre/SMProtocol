@@ -47,5 +47,5 @@ require_once(APPLICATION_PATH.'/protocol/plugins/mysql.php');
 /** Bootstrap application */
 /** including all protocols in protocol directory */
 require_once(SMProtocol_PATH.'/SMProtocol.php');
-
+/** Run daemon */
 new \library\SMProtocol\SMProtocol();

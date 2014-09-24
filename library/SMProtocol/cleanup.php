@@ -26,7 +26,7 @@ class cleanup
 
             foreach ($_reflection->getProperties() as $_property) {
                 if (!$_property->isStatic()) {
-                    SMProtocol::_print('[unset] ' . COLOR_RED . 'Unset ' . $_property->getName() . COLOR_WHITE . PHP_EOL);
+                    //SMProtocol::_print('[unset] ' . COLOR_RED . 'Unset ' . $_property->getName() . COLOR_WHITE . PHP_EOL);
                     if (is_object($this->{$_property->getName()})) {
                         if (method_exists($this->{$_property->getName()}, '_cleanup')) {
                             $this->{$_property->getName()}->_cleanup();
@@ -37,14 +37,14 @@ class cleanup
                         unset($this->$_property);
                     }
                 } else {
-                    SMProtocol::_print('[unset] ' . COLOR_RED . 'Unset ' . $_property->getName() . COLOR_WHITE . PHP_EOL);
+                    //SMProtocol::_print('[unset] ' . COLOR_RED . 'Unset ' . $_property->getName() . COLOR_WHITE . PHP_EOL);
                     /** @var string $name */
                     $name = $_reflection->getName();
                     if (is_array($name::${$_property->getName()})) {
                         SMProtocol::_print('[unset] ' . COLOR_RED . 'Unset array ' . $_property->getName() . COLOR_WHITE . PHP_EOL);
                         foreach ($name::${$_property->getName()} as $_key => $_item) {
                             if (is_object($_item)) {
-                                SMProtocol::_print('[unset] ' . COLOR_RED . 'Unset key ' . $_key . COLOR_WHITE . PHP_EOL);
+                                //SMProtocol::_print('[unset] ' . COLOR_RED . 'Unset key ' . $_key . COLOR_WHITE . PHP_EOL);
                                 $this->_cleanup($_item);
                             } else if (is_array($_item)) {
                                 $this->_cleanupArray($_item);
