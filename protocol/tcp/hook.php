@@ -69,8 +69,9 @@ class hook extends \library\SMProtocol\abstracts\hook
     public function preDispatch($address, $port)
     {
         $this->_download = new \download();
+        $this->_download->setLocation($address);
         SMProtocol::_print('Connection received from '.$address.' on port '.$port.PHP_EOL);
-        $this->_download->setIp(new \ip('80.250.29.169', $port));
+        $this->_download->setIp(new \ip($address, $port));
         $this->_download->start_at = $_SERVER['REQUEST_TIME'];
         $this->_speed = $this->_speed * 2048;
 
@@ -178,7 +179,7 @@ class hook extends \library\SMProtocol\abstracts\hook
                             }
                         } else $this->_offset++;
                         /** @var resource $finfo */
-                        $finfo = finfo_open(FILEINFO_MIME, '/usr/share/misc/magic.mgc');
+                        $finfo = finfo_open(FILEINFO_MIME, null);
                         if($finfo) {
                             $filename = APPLICATION_PATH.'/protocol/tcp/files/'.$file;
                             /** application/zip; charset=binary */
@@ -312,6 +313,6 @@ class hook extends \library\SMProtocol\abstracts\hook
     public function postDispatch()
     {
         /** @var int end_at */
-        $this->_download->end_at = mktime();
+        $this->_download->end_at = time();
     }
 }

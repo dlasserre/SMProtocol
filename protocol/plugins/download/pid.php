@@ -3,7 +3,7 @@
  * Class pid
  * @author Damien Lasserre <damien.lasserre@gmail.com>
  */
-class pid extends \library\SMProtocol\cleanup
+class pid
 {
     /** @var  int $ppid */
     public $ppid;
@@ -31,23 +31,5 @@ class pid extends \library\SMProtocol\cleanup
         $this->memory_max_used = $memory_max_used;
         $this->nb_garbage_collector_cycle = $nb_garbage_collector_cycle;
         $this->defunct = $defunct;
-    }
-
-    /**
-     * @author Damien Lasserre <damien.lasserre@gmail.com>
-     * @param string $class
-     */
-    public function _cleanup($class = null)
-    {
-        if(null !== $class)
-            parent::_cleanup($class);
-    }
-
-    /**
-     * @author Damien Lasserre <damien.lasserre@gmail.com>
-     */
-    public function __destruct()
-    {
-        parent::_cleanup(__CLASS__);
     }
 } 

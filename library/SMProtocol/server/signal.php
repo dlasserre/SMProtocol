@@ -38,11 +38,11 @@ class signal
             case SIGTERM:
                 self::_sigTerm();
                 break;
+            case SIGUSR1:
+                self::_sigHup();
+                break;
             case SIGCHLD:
                 self::_sigKill();
-                break;
-            case SIGHUP:
-                self::_sigHup();
                 break;
             case SIGINT:
                 self::_sigKill();
@@ -61,7 +61,7 @@ class signal
         $_copy = SMProtocol::$_servers;
 
         foreach($_copy as $pid => $server) {
-            posix_kill($pid, SIGHUP);
+            posix_kill($pid, SIGUSR1);
         }
     }
 

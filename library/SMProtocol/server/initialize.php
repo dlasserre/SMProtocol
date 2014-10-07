@@ -86,7 +86,7 @@ class initialize extends cleanup
             socket_close(self::$_socket);
     }
 
-    public function _cleanup($class)
+    public function _cleanup($class = null)
     {
         parent::_cleanup($class);
     }

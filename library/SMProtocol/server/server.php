@@ -125,7 +125,7 @@ class server extends initialize
                                     /** @var int $_cycle */
                                     $_cycle = gc_collect_cycles();
                                     $pid->nb_garbage_collector_cycle = $_cycle;
-                                    SMProtocol::_print('[' . $_name . ']' . COLOR_BLUE . 'Garbage Collector:' . COLOR_GREEN . ' Number of cycle collected < ' . COLOR_WHITE . $_cycle . COLOR_GREEN . ' >' . COLOR_WHITE . PHP_EOL);
+                                    SMProtocol::_print('[' . $_name . ']' . COLOR_BLUE . ' Garbage Collector:' . COLOR_GREEN . ' Number of cycle collected < ' . COLOR_WHITE . $_cycle . COLOR_GREEN . ' >' . COLOR_WHITE . PHP_EOL);
                                 }
                                 // Process defunct (work in progress for this stat)
                                 $pid->defunct = false;
@@ -137,7 +137,7 @@ class server extends initialize
                                         SMProtocol::_print('[' . $this->_name . '] ' . COLOR_ORANGE . 'Stored download(s) completed.' . COLOR_WHITE . PHP_EOL);
                                     } else {
                                         SMProtocol::_print('['.$this->_name.'] '.COLOR_RED.'Connection with all clients was terminated and closed, now save stats in database.'.COLOR_WHITE.PHP_EOL);
-                                        $this->saveDownload($this->_hooks[(string)$read]->getDownload());
+                                        $this->storeDownload($this->_hooks[(string)$read]->getDownload());
                                     }
                                 }
                                 /** close socket, work finish */
@@ -153,9 +153,9 @@ class server extends initialize
         SMProtocol::_print('['.$this->_name.'] '.COLOR_RED.'Connection with all clients was terminated and closed, now save stats in database.'.COLOR_WHITE.PHP_EOL);
         // Save download after all transactions !
         foreach($this->_downloads as $key => $download) {
-            if(in_array($download->http_response, array(200, 206)))
-                $this->saveDownload($download);
-            else {
+            if(in_array($download->http_response, array(200, 206))) {
+                $this->storeDownload($download);
+            } else {
                 SMProtocol::_print('['.$this->_name.'] '.COLOR_RED.' Download not save because HTTP code is '.$download->http_response.COLOR_WHITE.PHP_EOL);
                 unset($this->_downloads[$key]);
             }
@@ -173,14 +173,16 @@ class server extends initialize
      * @param \download $download
      * @return void
      */
-    protected function saveDownload(\download $download)
+    protected function storeDownload(\download $download)
     {
         /** Save all debug during transaction with the server, just for precaution :D */
         foreach(SMProtocol::$_debugs as $debug) {
             $download->addDebug(new \debug($debug));
         }
-        if($download->save()) {
-            SMProtocol::_print('['.$this->_name.'] '.COLOR_GREEN.'Save download  completed.'.COLOR_WHITE.PHP_EOL);
+        $_col = \noSql::getInstance()->selectDB('download')
+            ->selectCollection('download');
+        if($_col->save($download)) {
+            SMProtocol::_print('['.$this->_name.COLOR_BLUE.'@pid:'.$download->_pid->pid.COLOR_WHITE.'] '.COLOR_GREEN.'Save download completed.'.COLOR_WHITE.PHP_EOL);
         } else {
             SMProtocol::_print('['.$this->_name.'] '.COLOR_RED.'Save download fail...'.COLOR_WHITE.PHP_EOL);
         }

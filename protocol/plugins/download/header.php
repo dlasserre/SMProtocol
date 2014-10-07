@@ -3,7 +3,7 @@
  * Class header
  * @author Damien Lasserre <damien.lasserre@gmail.com>
  */
-class header extends \library\SMProtocol\cleanup
+class header
 {
     /** @var  string $header */
     public $header;
@@ -19,23 +19,5 @@ class header extends \library\SMProtocol\cleanup
     {
         $this->header = $header;
         $this->value = $value;
-    }
-
-    /**
-     * @author Damien Lasserre <damien.lasserre@gmail.com>
-     * @param string $class
-     */
-    public function _cleanup($class = null)
-    {
-        if(null !== $class)
-            parent::_cleanup($class);
-    }
-
-    /**
-     * @author Damien Lasserre <damien.lasserre@gmail.com>
-     */
-    public function __destruct()
-    {
-        parent::_cleanup(__CLASS__);
     }
 } 

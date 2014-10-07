@@ -20,6 +20,8 @@ class SMProtocol extends cleanup
     public static $_servers;
     /** @var  int $_pid */
     public static $_pid;
+    /** @var  array */
+    protected $_plugins;
     /** @var  string[] $_debugs */
     public static $_debugs;
 
@@ -31,7 +33,6 @@ class SMProtocol extends cleanup
         pcntl_signal(SIGINT, array('library\SMProtocol\server\signal', 'handleSMP'));
         pcntl_signal(SIGTERM, array('library\SMProtocol\server\signal', 'handleSMP'));
         pcntl_signal(SIGCHLD, array('library\SMProtocol\server\signal', 'handleSMP'));
-        pcntl_signal(SIGHUP, array($this, 'restart'));
         self::$_pid = posix_getpid();
         $this->launchProtocols();
     }
@@ -50,8 +51,6 @@ class SMProtocol extends cleanup
         $_hook = null;
         /** @var array $_exclude_files */
         $_exclude_files = array('interfaces', 'hook.php', 'definition.php', '.', '..', 'plugins');
-        /** @var int $_childs */
-        $_childs = 1;
 
         include('header.txt');
         /** @var string $directory */
@@ -82,7 +81,7 @@ class SMProtocol extends cleanup
                                 /** increment array of process */
                                 self::$_servers[$pid] = array(
                                     'protocol' => $directory,
-                                    'start' => mktime()
+                                    'start' => time()
                                 );
                                 if(!gc_enabled()) {
                                     SMProtocol::_print('['.$directory.'] '.COLOR_ORANGE.'Garbage Collector was not enabled...'.COLOR_WHITE.PHP_EOL);
@@ -106,6 +105,19 @@ class SMProtocol extends cleanup
                                     continue;
                                 }
                                 SMProtocol::_print('['.$directory.'] '.COLOR_GREEN.'Success:'.COLOR_WHITE.' detached with pid <'.COLOR_BLUE.posix_getpid().COLOR_WHITE.'>, parent pid <'.COLOR_BLUE.posix_getppid().COLOR_WHITE.'>'.PHP_EOL);
+                                if(is_array($this->_plugins) and count($this->_plugins)) {
+                                    /** @var string $_method */
+                                    $_method = APPLICATION_ENV.'Plugin';
+                                    if(method_exists($_instance, $_method)) {
+                                        foreach ($this->_plugins as $_plugin) {
+                                            $_configuration = $_instance->$_method();
+                                            if(array_key_exists($_plugin, $_configuration)) {
+                                                $_plugin::getInstance($_configuration[$_plugin]);
+                                                SMProtocol::_print('[plugin:'.$_plugin.'] '.COLOR_GREEN.'Successfully loaded' . COLOR_WHITE . PHP_EOL);
+                                            }
+                                        }
+                                    }
+                                }
                                 SMProtocol::_print(PHP_EOL);
                                 new \library\SMProtocol\server\server($_instance, $directory);
                                 exit;
@@ -125,6 +137,19 @@ class SMProtocol extends cleanup
                     } else if(!in_array($file, $_exclude_files)) {
                         SMProtocol::_print('['.$directory.'] '.COLOR_RED.'Error: definition file not found...'.COLOR_WHITE.PHP_EOL);
                     }
+                } else {
+                    if($directory == 'plugins') {
+                        /** @var resource $_plugins_dir */
+                        $_plugins_dir = opendir(APPLICATION_PATH.'/protocol/plugins');
+                        while($plugin = readdir($_plugins_dir))
+                        {
+                            if(is_file(APPLICATION_PATH.'/protocol/plugins/'.$plugin)) {
+                                /** @noinspection PhpIncludeInspection */
+                                require_once(APPLICATION_PATH . '/protocol/plugins/'.$plugin);
+                                $this->_plugins[] = substr($plugin, 0, -4);
+                            }
+                        }
+                    }
                 }
             }
         }
@@ -135,13 +160,13 @@ class SMProtocol extends cleanup
             $pid = pcntl_waitpid(-1, $status, WNOHANG);
             if($pid) {
                 $sig = pcntl_wstopsig($status);
-                if($sig === SIGHUP) {
+                if($sig === SIGUSR1) {
                     $this->restartService($pid);
                 }
             }
             /** Restart all services if SIGHUP send as SMP process */
-            @pcntl_sigwaitinfo(array(SIGHUP), $info);
-            if((int)$info['signo'] === SIGHUP) {
+            @pcntl_sigwaitinfo(array(SIGUSR1), $info);
+            if((int)$info['signo'] === SIGUSR1) {
                 $this->restart();
             }
         }

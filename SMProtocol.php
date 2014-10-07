@@ -1,4 +1,4 @@
-#!/usr/bin/php
+
 <?php
 /** Global defined */
 defined('APPLICATION_PATH') || define('APPLICATION_PATH', realpath(__DIR__));
@@ -43,7 +43,6 @@ require_once(SMProtocol_PATH.'/server/server.php');
 
 /** Require download object */
 require_once(APPLICATION_PATH.'/protocol/plugins/download/download.php');
-require_once(APPLICATION_PATH.'/protocol/plugins/mysql.php');
 /** Bootstrap application */
 /** including all protocols in protocol directory */
 require_once(SMProtocol_PATH.'/SMProtocol.php');

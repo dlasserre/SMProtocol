@@ -3,7 +3,7 @@
  * Class file
  * @author Damien Lasserre <damien.lasserre@gmail.com>
  */
-class file extends \library\SMProtocol\cleanup
+class file
 {
     /** @var  string $name */
     public $name;
@@ -23,23 +23,5 @@ class file extends \library\SMProtocol\cleanup
         $this->name = $name;
         $this->size = $size;
         $this->version = $version;
-    }
-
-    /**
-     * @author Damien Lasserre <damien.lasserre@gmail.com>
-     * @param string $class
-     */
-    public function _cleanup($class = null)
-    {
-        if(null !== $class)
-            parent::_cleanup($class);
-    }
-
-    /**
-     * @author Damien Lasserre <damien.lasserre@gmail.com>
-     */
-    public function __destruct()
-    {
-        parent::_cleanup(__CLASS__);
     }
 } 

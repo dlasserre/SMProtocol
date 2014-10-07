@@ -3,7 +3,7 @@
  * Class location
  * @author Damien Lasserre <damien.lasserre@gmail.com>
  */
-class location extends \library\SMProtocol\cleanup
+class location
 {
     /** @var  string $country_code */
     public $country_code;
@@ -39,23 +39,5 @@ class location extends \library\SMProtocol\cleanup
         $this->city = $city;
         $this->longitude = $longitude;
         $this->latitude = $latitude;
-    }
-
-    /**
-     * @author Damien Lasserre <damien.lasserre@gmail.com>
-     * @param string $class
-     */
-    public function _cleanup($class = null)
-    {
-        if(null !== $class)
-            parent::_cleanup($class);
-    }
-
-    /**
-     * @author Damien Lasserre <damien.lasserre@gmail.com>
-     */
-    public function __destruct()
-    {
-        parent::_cleanup(__CLASS__);
     }
 }
