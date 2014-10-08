@@ -24,7 +24,7 @@ use library\SMProtocol\SMProtocol;
 use plugins\http\http;
 
 /**
- * Class smtp
+ * Class tcp
  * @author Damien Lasserre <damien.lasserre@gmail.com>
  * @package hook
  */
@@ -52,7 +52,7 @@ class hook extends \library\SMProtocol\abstracts\hook
     /** @var  int $_percent */
     protected $_percent;
     /** @var int $_speed */
-    protected $_speed = 2048;
+    protected $_speed = 512;
 
     /** @var  \download $_download */
     protected $_download;
@@ -68,12 +68,13 @@ class hook extends \library\SMProtocol\abstracts\hook
      */
     public function preDispatch($address, $port)
     {
+        /** @var \download _download */
         $this->_download = new \download();
         $this->_download->setLocation($address);
         SMProtocol::_print('Connection received from '.$address.' on port '.$port.PHP_EOL);
         $this->_download->setIp(new \ip($address, $port));
-        $this->_download->start_at = $_SERVER['REQUEST_TIME'];
-        $this->_speed = $this->_speed * 2048;
+        $this->_download->start_at = time();
+        $this->_speed = $this->_speed * 512;
 
     }
 
@@ -112,7 +113,7 @@ class hook extends \library\SMProtocol\abstracts\hook
                 /** @var string $_path */
                 $_path = APPLICATION_PATH . '/protocol/tcp/files/' . $file;
                 if ($request->_uri) {
-                    /** File not found */
+                    /** File not found or file condition cached */
                     if (!is_file($_path)) {
                         SMProtocol::_print('[tcp] ' . COLOR_BLUE . 'File asked "' . $file . '" ' . COLOR_WHITE . PHP_EOL);
                         /** @var string $_response_text */
@@ -152,7 +153,7 @@ class hook extends \library\SMProtocol\abstracts\hook
                                 /** @var int $seek_start */
                                 $seek_start = (empty($seek_start) || $seek_end < abs(intval($seek_start))) ? 0 : max(abs(intval($seek_start)),0);
                                 /** inform header part request 206 HTTP CODE */
-                                if ($seek_start > 0 || $seek_end < ($this->_size - 1)){
+                                if ($seek_start >= 0 || $seek_end < ($this->_size - 1)){
                                     /** @var int _range_start */
                                     $this->_range_start = $seek_start;
                                     /** @var int _range_end */
@@ -220,7 +221,7 @@ class hook extends \library\SMProtocol\abstracts\hook
                         ->header('Accept-Ranges', 'bytes');
                 } else {
                     $memcache = new \Memcache();
-                    $memcache->addserver('localhost', 11211);
+                    $memcache->addserver('127.0.0.1', 11211);
                     if(!$memcache->get($filename)) {
                         echo 'not in memcache'.PHP_EOL;
                         $memcache->add($filename, file_get_contents($this->_file));

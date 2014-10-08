@@ -2,6 +2,7 @@
 /** Namespace engine\server */
 namespace library\SMProtocol\server;
 use library\SMProtocol\cleanup;
+use library\SMProtocol\engine\server\semaphore;
 use library\SMProtocol\exception;
 use library\SMProtocol\SMProtocol;
 use library\SMProtocol\interfaces\definition;
@@ -67,8 +68,12 @@ class initialize extends cleanup
             }
         } while($binding <= 0);
         SMProtocol::_print(COLOR_WHITE.PHP_EOL);
+        if(!$this->_definition->sumaxconn) {
+            $this->_definition->sumaxconn = SOMAXCONN;
+        }
+        SMProtocol::_print('['.COLOR_RED.'Kernel:SOMAXCONN'.COLOR_WHITE.'] Set at '.$this->_definition->sumaxconn.', by default the system was set at '.SOMAXCONN.' (Max simultaneously sockets manage by the kernel)'.PHP_EOL);
         /** Listen socket */
-        if(socket_listen($_socket) <= 0) {
+        if(socket_listen($_socket, $this->_definition->sumaxconn) <= 0) {
             throw new exception\server(socket_last_error($_socket));
         }
         SMProtocol::_print('['.$this->_name.'] '.COLOR_GREEN.'Running success'.COLOR_WHITE.PHP_EOL);

@@ -4,7 +4,7 @@
 -  2 - Requirements 
 -  3 - How to install SMProtocol
 -  4 - System operation
--  5 - Database model
+-  5 - UML model, save in noSQL database (MongoDB)
 -  6 - Understand SMProtocol log output
 -  7 - Reference
 
@@ -102,8 +102,8 @@ After children wipe, no defunct process, the process manage is really optimized 
 
 ### 5 - Database model
 
-Please see this MCD bellow:
-![Alt text](http://img11.hostingpics.net/pics/440327diagram.png "MCD")
+Please see this UML bellow:
+![Alt text](http://img11.hostingpics.net/pics/187023diagram.png "MCD")
 
 ### 6 - Understand SMProtocol log output
 SMProtocol return more information in standard output, if you want to trace a problème or bug please check the log and create a ticket in gitticket manager.

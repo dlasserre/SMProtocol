@@ -14,8 +14,8 @@ class definition extends \library\SMProtocol\abstracts\definition
      */
     public function __construct()
     {
-        $this->host = '10.42.10.87';
-        $this->port = 8081;
+        $this->host = '127.0.0.1';
+        $this->port = 8082;
     }
 
     /**

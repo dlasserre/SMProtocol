@@ -12,7 +12,7 @@ defined('LOG_FILE') || define('LOG_FILE', APPLICATION_PATH.'/log/SMProtocol.log'
 defined('LOG_IN_FILE') || define('LOG_IN_FILE', 1);
 defined('LOG_IN_OUTPUT') || define('LOG_IN_OUTPUT', 2);
 defined('LOG_LEVEL') || define('LOG_LEVEL', LOG_IN_FILE | LOG_IN_OUTPUT);
-
+defined('__BUFFER__') || define('__BUFFER__', 100);
 /** Color defined */
 defined('COLOR_GREEN') || define('COLOR_GREEN', "\033[92m");
 defined('COLOR_BLUE') || define('COLOR_BLUE', "\033[94m");
@@ -40,11 +40,12 @@ require_once(SMProtocol_PATH.'/exception/socket.php');
 require_once(SMProtocol_PATH.'/server/signal.php');
 require_once(SMProtocol_PATH.'/server/initialize.php');
 require_once(SMProtocol_PATH.'/server/server.php');
+require_once(SMProtocol_PATH.'/server/semaphore.php');
 
 /** Require download object */
 require_once(APPLICATION_PATH.'/protocol/plugins/download/download.php');
 /** Bootstrap application */
 /** including all protocols in protocol directory */
 require_once(SMProtocol_PATH.'/SMProtocol.php');
-
+/** Run daemon */
 new \library\SMProtocol\SMProtocol();

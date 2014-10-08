@@ -3,6 +3,7 @@
 namespace library\SMProtocol\server;
 /** Usages */
 use library\SMProtocol\abstracts\hook;
+use library\SMProtocol\engine\server\semaphore;
 use library\SMProtocol\engine\server\sender;
 use library\SMProtocol\SMProtocol;
 use library\SMProtocol\abstracts\definition;
@@ -37,7 +38,6 @@ class server extends initialize
     {
         /** tick for received signal from children */
         declare(ticks=1);
-
         /** For defunct process */
         pcntl_signal(SIGCHLD, SIG_IGN);
         if(false !== parent::__construct($definition, $_name)) {
@@ -51,8 +51,8 @@ class server extends initialize
             /** While socket is alive */
             for(;;) {
                 /** If you want to change max connection by process, please use definition file in your protocol. */
-                if(count($this->_clients) == $definition->max_connection
-                    and $_pid === null) {
+                if((count($this->_clients)+1) == $definition->max_connection
+                    and null === $_pid) {
                     SMProtocol::_print('['.$this->_name.'] Children born'.PHP_EOL);
                     /** @var int $_pid */
                     $_pid = pcntl_fork();
@@ -65,7 +65,7 @@ class server extends initialize
                     $this->_clients = null;
                     /** @var mixed $_pid */
                     $_pid = null;
-                } else if(!$_pid or $_pid === null){
+                } else if(!$_pid or $_pid === null) {
                     if(0 === $_pid) {
                         /** Children process */
                         $this->_accept = False;
@@ -78,10 +78,11 @@ class server extends initialize
                         $_reads = array_merge($_reads, $this->_clients);
                     /** @var array $_write */
                     $_write = $_reads;
-                    // Unset parent in socket write, only ready in I/O input...
+                    // Unset parent in socket write, only ready in Input...
                     // all other socket maybe potential write or read.
                     unset($_write[(string)parent::$_socket]);
                     if (@socket_select($_reads, $_write, $_except = null, null) < 1) {
+                        SMProtocol::_print('['.$this->_name.'] '.COLOR_ORANGE.'Warning, '.socket_last_error().COLOR_WHITE.PHP_EOL);
                         continue;
                     }
                     /** @var array $_reads */
@@ -99,19 +100,12 @@ class server extends initialize
                                 SMProtocol::_print('[SMProtocol]: ' . COLOR_RED . socket_last_error($_client) . COLOR_WHITE . PHP_EOL);
                             }
                             if ($_client > 0) {
-                                // If ok to accept connection
-                                if($this->_accept) {
-                                    $this->_clients[(string)$_client] = $_client;
-                                    /** @var string $_hook_class */
-                                    $_hook_class = $this->_name . '\hook';
-                                    $this->_hooks[(string)$_client] = new $_hook_class(new sender($_client, $definition, $_name));
-                                    /** Call preDispatching hook method */
-                                    $this->_hooks[(string)$_client]->preDispatch($address, $port);
-                                } else {
-                                    SMProtocol::_print('['.$this->_name.'] '.COLOR_RED.'Socket refused, because process turned accept FALSE'.COLOR_WHITE.PHP_EOL);
-                                    /** Close connection refused on, this process is full working. */
-                                    socket_close($_client);
-                                }
+                                $this->_clients[(string)$_client] = $_client;
+                                /** @var string $_hook_class */
+                                $_hook_class = $this->_name . '\hook';
+                                $this->_hooks[(string)$_client] = new $_hook_class(new sender($_client, $definition, $_name));
+                                /** Call preDispatching hook method */
+                                $this->_hooks[(string)$_client]->preDispatch($address, $port);
                             }
                             // CLIENT
                         } else {

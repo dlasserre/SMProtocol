@@ -3,6 +3,7 @@
 namespace library\SMProtocol;
 /** Namespace usage */
 use library\SMProtocol\abstracts\hook;
+use library\SMProtocol\engine\server\semaphore;
 use library\SMProtocol\engine\server\sender;
 use library\SMProtocol\exception\client;
 use library\SMProtocol\exception\server;
