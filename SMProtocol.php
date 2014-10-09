@@ -5,7 +5,7 @@ defined('APPLICATION_PATH') || define('APPLICATION_PATH', realpath(__DIR__));
 defined('SMProtocol_PATH') || define('SMProtocol_PATH', APPLICATION_PATH.'/library/SMProtocol');
 
 /** Application environment */
-defined('APPLICATION_ENV') || define('APPLICATION_ENV', (($_env = getenv('APPLICATION_ENV'))?$_env:'production'));
+defined('APPLICATION_ENV') || define('APPLICATION_ENV', (($_env = getenv('APPLICATION_ENV'))?$_env:'development'));
 
 /** Application log */
 defined('LOG_FILE') || define('LOG_FILE', APPLICATION_PATH.'/log/SMProtocol.log');

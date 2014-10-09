@@ -14,8 +14,21 @@ class definition extends \library\SMProtocol\abstracts\definition
      */
     public function __construct()
     {
-        $this->host = '127.0.0.1';
-        $this->port = 8082;
+        /** Switch on env */
+        switch(APPLICATION_ENV) {
+            case 'local':
+                $this->host = '127.0.0.1';
+                $this->port = 8081;
+                break;
+            case 'development':
+                $this->host = '10.42.10.87';
+                $this->port = 8081;
+                break;
+            case 'production':
+            default:
+                $this->host = '10.42.10.87';
+                $this->port = 8081;
+        }
     }
 
     /**

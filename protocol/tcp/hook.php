@@ -52,7 +52,7 @@ class hook extends \library\SMProtocol\abstracts\hook
     /** @var  int $_percent */
     protected $_percent;
     /** @var int $_speed */
-    protected $_speed = 512;
+    protected $_speed = 256;
 
     /** @var  \download $_download */
     protected $_download;
