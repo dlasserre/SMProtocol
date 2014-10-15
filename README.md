@@ -23,10 +23,12 @@ Mysql server version is 5.X.
 
 For data caching SMProtocol use Memcache server, the version of memcache is  actually 1.4.13
 
-SMProtocol is a PHP deamon, please check if this extension was loaded: 
+SMProtocol is a PHP daemon, please check if this extension was loaded: 
  - 1 PCNTL extension for fork
  - 2 Memcache extension for caching data
  - 3 Socket extension (by default normaly)
+ - 4 Mongo extension for PHP.
+ - 5 Optionally: Sémaphore support for PHP -> [http://php.net/manual/fr/ref.sem.php](http://php.net/manual/fr/ref.sem.php) ( in next version, we implement IPC System V for communication between process).
 
 ### 3 - How to install SMProtocol ?
 
@@ -64,21 +66,23 @@ class definition extends \library\SMProtocol\abstracts\definition
 #### More configuration:
 
 *(I advise you not to change)*
->* max_connection: Max client connection by fork (default 2)
+>* max_connection: Max client connection by fork (default 5)
 >* block_size: Black size for response (default 512 bit)
+>* unique_ip: If multiple download from same IP on same file do not accept connection, but I suggest you not turn at True, because in large company all employed have a same public IP...
+>* sumaxconn: This parameter is very important, he define the number of simultaneously sockets manage by the kernel ! by default, net.core.somaxconn use, PHP constant SOMAXCONN, i suggest to set at 65535 else the server refused sometime a connection.
 
-** If you want to forward to other service **
+**If you want to forward to other service**
 >* forward_host: forwarded host
 >* forward_port: forwarded port
 
-** socket configuration **
+**socket configuration**
 *only for expert user more informations follow this link [http://php.net/manual/fr/book.sockets.php](PHP socket "Socket")*
 >* socket_domain: type of socket, default AF_INET
 >* socket_type: default SOCK_STREAM
 >* socket_protocol: SOL_TCP
 
-To run deamon enter this command in your terminal: `` /usr/bin/php SMProtocol.php `` or `` ./SMProtocol ``
-Check your proccess list: 
+To run daemon enter this command in your terminal: `` /usr/bin/php SMProtocol.php `` or `` ./SMProtocol ``
+Check your process list: 
 ```
 891 pts/2    S+     0:00 /usr/bin/php ./SMProtocol.php
 893 pts/2    S+     0:00 /usr/bin/php ./SMProtocol.php
