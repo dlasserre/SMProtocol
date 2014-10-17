@@ -33,15 +33,15 @@ SMProtocol is a PHP daemon, please check if this extension was loaded:
 ### 3 - How to install SMProtocol ?
 
 For installing SMProtocol is very faster and simply, please clone git via [https://github.com/dlasserre/SMProtocol.git](https://github.com/dlasserre/SMProtocol.git/ "Git repository").
-1 - open /etc/environment and add this line 'export APPLICATION_ENV=development' at end of file.
-2 - run this command ``` export APPLICATION_ENV=development ```
-3 - check if mongod is running.
-4 - check the date.timezone is defined in you php.ini
-5 - create directory and file : 
-    - /var/log/SMProtocol.log (add permissions)
-6 - Check all requirements above !
-7 - Good luck and have fun :D
-8 - Open this file SMProtocol/protocol/tcp/definition.php and read the comments :
+>1 - open /etc/environment and add this line 'export APPLICATION_ENV=development' at end of file.
+>2 - run this command ``` export APPLICATION_ENV=development ```
+>3 - check if mongod is running.
+>4 - check the date.timezone is defined in you php.ini
+>5 - create directory and file : 
+> >- /var/log/SMProtocol.log (add permissions)
+>6 - Check all requirements above !
+>7 - Good luck and have fun :D
+>8 - Open this file SMProtocol/protocol/tcp/definition.php and read the comments :
 ```
 <?php
 /** Namespace protocol\tcp */
@@ -71,7 +71,7 @@ class definition extends \library\SMProtocol\abstracts\definition
     }
 }
 ```
-9 - update method 
+>9 - update method 
 ```
 <?php 
 public function developmentPlugin()
@@ -89,8 +89,8 @@ public function developmentPlugin()
     }
 ?>
 ```
-10 - Move file "/SMProtocol/download" in your /etc/init.d/ and update.rc
-11 - Start the service: /etc/init.d/download start
+>10 - Move file "/SMProtocol/download" in your /etc/init.d/ and update.rc
+>11 - Start the service: /etc/init.d/download start
 #### More configuration:
 
 *(I advise you not to change)*
