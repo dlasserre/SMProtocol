@@ -5,6 +5,10 @@
  */
 class ip
 {
+    /** @var  MongoId $_id */
+    public $_id;
+    /** @var  int $id_request */
+    public $id_request;
     /** @var  string $ip */
     public $ip;
     /** @var  int $port */
@@ -12,11 +16,12 @@ class ip
 
     /**
      * @author Damien Lasserre <damien.lasserre@gmail.com>
-     * @param string $ip
+     * @param MongoId $mongoId
      */
-    public function __construct($ip = null, $port = null)
+    public function __construct(MongoId $mongoId = null)
     {
-        $this->ip = $ip;
-        $this->port = $port;
+        if(null === $mongoId)
+            $this->_id = new MongoId();
+        else $this->_id = $mongoId;
     }
 } 

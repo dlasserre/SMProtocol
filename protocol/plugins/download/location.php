@@ -5,6 +5,10 @@
  */
 class location
 {
+    /** @var  string $_id */
+    public $_id;
+    /** @var  int $id_request */
+    public $id_request;
     /** @var  string $country_code */
     public $country_code;
     /** @var  string $country_name */
@@ -22,22 +26,12 @@ class location
 
     /**
      * @author Damien Lasserre <damien.lasserre@gmail.com>
-     * @param string $country_code
-     * @param string $country_name
-     * @param string $business_zone
-     * @param string $region
-     * @param string $city
-     * @param string $longitude
-     * @param string $latitude
+     * @param MongoId $mongoId
      */
-    public function __construct($country_code = null, $country_name = null, $business_zone = null, $region = null, $city = null, $longitude = null, $latitude = null)
+    public function __construct(MongoId $mongoId = null)
     {
-        $this->country_code = $country_code;
-        $this->country_name = $country_name;
-        $this->business_zone = $business_zone;
-        $this->region = $region;
-        $this->city = $city;
-        $this->longitude = $longitude;
-        $this->latitude = $latitude;
+        if(null !== $mongoId)
+            $this->_id = new MongoId();
+        else $this->_id = $mongoId;
     }
 }

@@ -35,6 +35,24 @@ class definition extends \library\SMProtocol\abstracts\definition
      * @author Damien Lasserre <damien.lasserre@gmail.com>
      * @return array
      */
+    public function localPlugin()
+    {
+        $_configuration = array(
+            /** Plugin list configuration */
+            'noSql' => array(
+                'host' => '127.0.0.1',
+                'port' => '27017',
+                'db' => 'download'
+            )
+        );
+        /** Return */
+        return ($_configuration);
+    }
+
+    /**
+     * @author Damien Lasserre <damien.lasserre@gmail.com>
+     * @return array
+     */
     public function developmentPlugin()
     {
         $_configuration = array(

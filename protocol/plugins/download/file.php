@@ -5,6 +5,8 @@
  */
 class file
 {
+    /** @var  int $_id */
+    public $_id;
     /** @var  string $name */
     public $name;
     /** @var  int $size */
@@ -14,14 +16,12 @@ class file
 
     /**
      * @author Damien Lasserre <damien.lasserre@gmail.com>
-     * @param string $name
-     * @param int $size
-     * @param string $version
+     * @param MongoId $mongoId
      */
-    public function __construct($name, $size, $version)
+    public function __construct(MongoId $mongoId = null)
     {
-        $this->name = $name;
-        $this->size = $size;
-        $this->version = $version;
+        if(null === $mongoId)
+            $this->_id = new MongoId();
+        else $this->_id = $mongoId;
     }
 } 

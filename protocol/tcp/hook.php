@@ -55,7 +55,7 @@ class hook extends \library\SMProtocol\abstracts\hook
     protected $_speed = 256;
 
     /** @var  \download $_download */
-    protected $_download;
+    //protected $_download;
     /** @var  bool $_range */
     protected $_range;
 
@@ -69,11 +69,11 @@ class hook extends \library\SMProtocol\abstracts\hook
     public function preDispatch($address, $port)
     {
         /** @var \download _download */
-        $this->_download = new \download();
-        $this->_download->setLocation($address);
+        //$this->_download = new \download();
+        //$this->_download->setLocation($address);
         SMProtocol::_print('Connection received from '.$address.' on port '.$port.PHP_EOL);
-        $this->_download->setIp(new \ip($address, $port));
-        $this->_download->start_at = time();
+        //$this->_download->setIp(new \ip($address, $port));
+        //$this->_download->start_at = time();
         $this->_speed = $this->_speed * 512;
 
     }
@@ -85,7 +85,7 @@ class hook extends \library\SMProtocol\abstracts\hook
     public function dispatch()
     {
         /** @var http $response */
-        $response = new http(null, $this->_download);
+        $response = new http(null/*, $this->_download*/);
         /** @var string $date */
         $date = substr(date(DATE_RFC2822), -6) . ' GMT';
 
@@ -95,7 +95,7 @@ class hook extends \library\SMProtocol\abstracts\hook
             /** @var http $request */
             $request = new http($input);
 
-            $this->_download->addHttpRequest(new \http_request($input));
+            //$this->_download->addHttpRequest(new \http_request($input));
             if ($request->getUri() == '/favicon.ico') {
                 SMProtocol::_print('[tcp]' . COLOR_BLUE . ' HTTP Request ask favicon.ico' . COLOR_WHITE . PHP_EOL);
                 $response->notFound()
@@ -105,7 +105,7 @@ class hook extends \library\SMProtocol\abstracts\hook
                     ->header('Content-Length', 0)
                     ->Crlf();
                 $this->send($response->__toString());
-                $this->_download->addHttpRequest(new \http_request($response->__toString()));
+                //$this->_download->addHttpRequest(new \http_request($response->__toString()));
                 $this->close();
             } else {
                 /** @var string $file */
@@ -126,7 +126,7 @@ class hook extends \library\SMProtocol\abstracts\hook
                             ->Crlf()
                             ->body($_response_text);
                         $this->send($response->__toString());
-                        $this->_download->addHttpRequest(new \http_request($response->__toString()));
+                        //$this->_download->addHttpRequest(new \http_request($response->__toString()));
                         $this->close();
                     } else {
                         SMProtocol::_print('[tcp] ' . COLOR_BLUE . 'File downloaded "' . $file . '" ' . COLOR_WHITE . PHP_EOL);
@@ -175,7 +175,7 @@ class hook extends \library\SMProtocol\abstracts\hook
                                     ->Crlf()
                                     ->body(null);
                                 $this->send($response->__toString());
-                                $this->_download->addHttpRequest(new \http_request($response->__toString()));
+                                //$this->_download->addHttpRequest(new \http_request($response->__toString()));
                                 $this->close();
                             }
                         } else $this->_offset++;
@@ -197,7 +197,7 @@ class hook extends \library\SMProtocol\abstracts\hook
             /** @var resource $fd */
             // On systems which differentiate between binary and text files (i.e. Windows) the file must be opened with 'b' included in fopen() mode parameter.
             $fd = fopen($this->_file, 'rb');
-            $this->_download->setFile(new \file($this->_file, $size, 0));
+            //$this->_download->setFile(new \file($this->_file, $size, 0));
             /** @var array $_explode */
             $_explode = explode('/', $this->_file);
             /** @var string $filename */
@@ -239,7 +239,7 @@ class hook extends \library\SMProtocol\abstracts\hook
                     /** @var int percent */
                     $this->_download->percent = 100;
                     $this->_download->completed = 1;
-                    $this->_download->addHttpRequest(new \http_request($response->__toString()));
+                    //$this->_download->addHttpRequest(new \http_request($response->__toString()));
                     $this->close();
                     return;
                 };
@@ -253,7 +253,7 @@ class hook extends \library\SMProtocol\abstracts\hook
                 if (false === $this->send($response->__toString(), 100)) {
                     $this->close();
                 }
-                $this->_download->addHttpRequest(new \http_request($response->__toString()));
+                //$this->_download->addHttpRequest(new \http_request($response->__toString()));
                 if($this->_range)
                     $this->_range = False;
             }
@@ -303,8 +303,7 @@ class hook extends \library\SMProtocol\abstracts\hook
      */
     public function getDownload()
     {
-        /** Return */
-        return ($this->_download);
+
     }
 
     /**

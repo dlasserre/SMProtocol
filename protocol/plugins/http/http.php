@@ -9,7 +9,7 @@ namespace plugins\http;
 class http
 {
     /** @var  \download $_download */
-    protected $_download;
+    //protected $_download;
 
     /** @var  string $_request */
     private $_request;
@@ -31,7 +31,7 @@ class http
      */
     public function __construct($_request = null, \download &$_download = null)
     {
-        $this->_download = $_download;
+        //$this->_download = $_download;
         if($_request) {
             $this->_request = $_request;
             $_headers = explode("\r\n", $_request);
@@ -71,7 +71,7 @@ class http
      */
     public function header($name, $value)
     {
-        $this->_download->addHeader(new \header(ucfirst($name), $value));
+        //$this->_download->addHeader(new \header(ucfirst($name), $value));
         $this->_request.= ucfirst($name).': '.$value;
         $this->Crlf();
         /** Return */
@@ -138,7 +138,7 @@ class http
      */
     public function ok()
     {
-        $this->_download->http_response = 200;
+        //$this->_download->http_response = 200;
         $this->_code = 200;
         $this->_request = 'HTTP/1.1 200 OK';
         $this->Crlf();
@@ -148,7 +148,7 @@ class http
 
     public function notFound()
     {
-        $this->_download->http_response = 404;
+        //$this->_download->http_response = 404;
         $this->_code = 404;
         $this->_request = 'HTTP/1.1 404 Not Found';
         $this->Crlf();
@@ -158,7 +158,7 @@ class http
 
     public function partial()
     {
-        $this->_download->http_response = 206;
+        //$this->_download->http_response = 206;
         $this->_code = 206;
         $this->_request = 'HTTP/1.1 206 Partial Content';
         $this->Crlf();
@@ -168,7 +168,7 @@ class http
 
     public function notSatisfiable()
     {
-        $this->_download->http_response = 416;
+        //$this->_download->http_response = 416;
         $this->_code = 416;
         $this->_request = 'HTTP/1.1 416 Requested Range Not Satisfiable';
         $this->Crlf();

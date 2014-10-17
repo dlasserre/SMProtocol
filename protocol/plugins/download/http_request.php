@@ -5,15 +5,21 @@
  */
 class http_request
 {
+    /** @var  mongoId $_id */
+    public $_id;
     /** @var  string $request */
     public $request;
+    /** @var  int $_id_parent */
+    public $_id_parent;
 
     /**
      * @author Damien Lasserre <damien.lasserre@gmail.com>
-     * @param $request
+     * @param MongoId $mongoId
      */
-    public function __construct($request)
+    public function __construct(MongoId $mongoId = null)
     {
-        $this->request = $request;
+        if(null === $mongoId)
+            $this->_id = new MongoId();
+        else $this->_id = $mongoId;
     }
 } 

@@ -5,6 +5,9 @@
  */
 class pid
 {
+    /** @var  int $_id_pid */
+    public $_id;
+
     /** @var  int $ppid */
     public $ppid;
     /** @var  int $pid */
@@ -18,18 +21,12 @@ class pid
 
     /**
      * @author Damien Lasserre <damien.lasserre@gmail.com>
-     * @param int $ppid
-     * @param int $pid
-     * @param int $memory_max_used
-     * @param int $nb_garbage_collector_cycle
-     * @param int $defunct
+     * @param MongoId $mongoId
      */
-    public function __construct($ppid = null, $pid = null, $memory_max_used = null, $nb_garbage_collector_cycle = null, $defunct = null)
+    public function __construct(MongoId $mongoId = null)
     {
-        $this->ppid = $ppid;
-        $this->pid = $pid;
-        $this->memory_max_used = $memory_max_used;
-        $this->nb_garbage_collector_cycle = $nb_garbage_collector_cycle;
-        $this->defunct = $defunct;
+        if(null === $mongoId)
+            $this->_id = new MongoId();
+        else $this->_id = $mongoId;
     }
 } 

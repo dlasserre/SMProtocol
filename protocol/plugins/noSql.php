@@ -10,6 +10,9 @@ class noSql
     private function __construct($environment)
     {
         try {
+            if ( !class_exists('mongo') ) {
+                throw new MongoConnectionException('Mongo-php extension not found...');
+            }
             \library\SMProtocol\SMProtocol::_print('[plugin:noSql] ' . COLOR_BLUE . 'Configuration loaded on ' .
                 $environment['host'] . ' port=' . $environment['port'] . ', db=' . $environment['db'] . COLOR_WHITE . PHP_EOL);
             $this->_mongodb = new MongoClient('mongodb://' . $environment['host'] . ':' . $environment['port'], array('connect' => True));
