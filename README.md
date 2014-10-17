@@ -130,7 +130,7 @@ Each childrens or parent if connection not exceeds 2, used socket select to mana
 
 ####Please see the workflow bellow:
 
-![Alt text](http://img11.hostingpics.net/pics/305492UntitledDiagram.jpg "Workflow")
+![Alt text](http://img11.hostingpics.net/pics/972669shema.jpg "Workflow")
 
 After children wipe, no defunct process, the process manage is really optimized :) normally...
 
