@@ -30,7 +30,7 @@ class initialize extends cleanup
      */
     public function __construct(\library\SMProtocol\abstracts\definition $definition, $_name)
     {
-        if($definition->host and $definition->port) {
+        if($definition->channel->host and $definition->channel->port) {
             $this->_name = $_name;
             /** @var \library\SMProtocol\abstracts\definition _definition */
             $this->_definition = $definition;
@@ -56,11 +56,11 @@ class initialize extends cleanup
             throw new exception\server(socket_last_error());
         }
         /** Binding socket on host and port. */
-        $dot = '['.$this->_name.'] Binding on '.COLOR_BLUE.$this->_definition->host.':'.$this->_definition->port.COLOR_WHITE;
+        $dot = '['.$this->_name.'] Binding on '.COLOR_BLUE.$this->_definition->channel->host.':'.$this->_definition->channel->port.COLOR_WHITE;
         do {
             $dot .= '.';
             /** @var bool $binding */
-            $binding = @socket_bind($_socket, $this->_definition->host, $this->_definition->port);
+            $binding = @socket_bind($_socket, $this->_definition->channel->host, $this->_definition->channel->port);
             sleep(2);
             SMProtocol::_print($dot."\r");
             if(socket_last_error($_socket)) {
