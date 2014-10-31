@@ -2,6 +2,7 @@
 /** Namespace engine */
 namespace library\SMProtocol;
 /** Namespace usage */
+use library\SMProtocol\abstracts\binding;
 use library\SMProtocol\abstracts\hook;
 use library\SMProtocol\engine\server\semaphore;
 use library\SMProtocol\engine\server\sender;
@@ -100,7 +101,7 @@ class SMProtocol extends cleanup
                             } else { // Child process
                                 /** @var definition $_instance */
                                 $_instance = new $_class();
-                                if(!$this->rootPrivilege($_instance->port)) {
+                                if(!$this->rootPrivilege($_instance->channel->port)) {
                                     SMProtocol::_print(COLOR_RED.$directory.' Stopped...'.COLOR_WHITE.PHP_EOL);
                                     unset($_instance);
                                     continue;

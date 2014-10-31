@@ -17,22 +17,31 @@ By default apache do not has interpret the partial download (HTTP 206 code), SM 
 
 ### 2 - Requirements:
 
-SMProtocol written in **PHP source code**, the PHP version is **5.3.X**, if you want to use the stats tracking SMProtocol (*download manager*) use an Mysql server and PDO connection between PHP en Mysql.
+SMProtocol written in **PHP source code**, the PHP version is **5.3.X**, if you want to use the stats tracking SMProtocol (*download manager*) use an MongoDB server and mongo.so extension for connection between PHP en MongoServer.
 
-Mysql server version is 5.X.
+MongoServer server version is 2.6.4
 
 For data caching SMProtocol use Memcache server, the version of memcache is  actually 1.4.13
 
 SMProtocol is a PHP daemon, please check if this extension was loaded: 
  - 1 PCNTL extension for fork
  - 2 Memcache extension for caching data
- - 3 Socket extension (by default normaly)
+ - 3 Socket extension (by default normally)
  - 4 Mongo extension for PHP.
- - 5 Optionally: Sémaphore support for PHP -> [http://php.net/manual/fr/ref.sem.php](http://php.net/manual/fr/ref.sem.php) ( in next version, we implement IPC System V for communication between process).
+ - 5 Optionally: Semaphore support for PHP -> [http://php.net/manual/fr/ref.sem.php](http://php.net/manual/fr/ref.sem.php) ( in next version, we implement IPC System V for communication between process).
 
 ### 3 - How to install SMProtocol ?
 
-For installing SMProtocol is very faster and simply, please clone git via [https://github.com/dlasserre/SMProtocol.git](https://github.com/dlasserre/SMProtocol.git/ "Git repository") and open this file SMProtocol/protocol/tcp/definition.php and read the comments :
+For installing SMProtocol is very faster and simply, please clone git via [https://github.com/dlasserre/SMProtocol.git](https://github.com/dlasserre/SMProtocol.git/ "Git repository").
+- 1 open /etc/environment and add this line 'export APPLICATION_ENV=development' at end of file.
+- 2  run this command ``` export APPLICATION_ENV=development ```
+- 3 check if mongod is running.
+- 4 check the date.timezone is defined in you php.ini
+- 5 create directory and file : 
+ - 1 /var/log/SMProtocol.log (add permissions)
+- 6 Check all requirements above !
+- 7 Good luck and have fun :D
+- 8 Open this file SMProtocol/protocol/tcp/definition.php and read the comments :
 ```
 <?php
 /** Namespace protocol\tcp */
@@ -52,7 +61,7 @@ class definition extends \library\SMProtocol\abstracts\definition
     {
         /** the ip, domain when server will be listened **/
         $this->host = '127.0.0.1';
-        /** the port where server will binded **/
+        /** the port where server will bind **/
         $this->port = 8081;
     }
 
@@ -60,9 +69,30 @@ class definition extends \library\SMProtocol\abstracts\definition
     {
         /** Log exception here ... */
     }
-} 
-
+}
 ```
+- 9 update method 
+```
+<?php 
+public function developmentPlugin()
+    {
+        $_configuration = array(
+            /** Plugin list configuration */
+            'noSql' => array( // example for mongodb
+                'host' => '127.0.0.1',
+                'port' => '27017',
+                'db' => 'download'
+            )
+        );
+        /** Return */
+        return ($_configuration);
+    }
+?>
+```
+- 10 Move file "/SMProtocol/download" in your /etc/init.d/ and update.rc
+- 11 Start the service: /etc/init.d/download start
+
+
 #### More configuration:
 
 *(I advise you not to change)*
@@ -76,7 +106,7 @@ class definition extends \library\SMProtocol\abstracts\definition
 >* forward_port: forwarded port
 
 **socket configuration**
-*only for expert user more informations follow this link [http://php.net/manual/fr/book.sockets.php](PHP socket "Socket")*
+*only for expert user more information follow this link [http://php.net/manual/fr/book.sockets.php](PHP socket "Socket")*
 >* socket_domain: type of socket, default AF_INET
 >* socket_type: default SOCK_STREAM
 >* socket_protocol: SOL_TCP
@@ -94,15 +124,15 @@ Check your process list:
 
 SMProtocol is based on php socket and **"fork concept"**, but the very important part is the process manager and socket, SMProtocol use the system call 'socket_select' RTFM :) if you want more information.
 
-Each new connection SMProtocol count the number simultanemous connection in process, if count is superior at max_connection parameter, SMP fork new process with the current connection, clean connection in parent and after accept the new connection.
+Each new connection SMProtocol count the number simultaneous connection in process, if count is superior at max_connection parameter, SMP fork new process with the current connection, clean connection in parent and after accept the new connection.
 
-Each childrens or parent if connection not exceeds 2, used socket select to manage multiple socket by process, the select function is more better than multi-threading (is my personaly thinking).
+Each childrens or parent if connection not exceeds 2, used socket select to manage multiple socket by process, the select function is more better than multi-threading (is my personal thinking).
 
 ####Please see the workflow bellow:
 
-![Alt text](http://img11.hostingpics.net/pics/305492UntitledDiagram.jpg "Workflow")
+![Alt text](http://img11.hostingpics.net/pics/972669shema.jpg "Workflow")
 
-After children wipe, no defunct process, the process manage is really optimized :) normaly...
+After children wipe, no defunct process, the process manage is really optimized :) normally...
 
 ### 5 - Database model
 
@@ -110,9 +140,9 @@ Please see this UML bellow:
 ![Alt text](http://img11.hostingpics.net/pics/187023diagram.png "MCD")
 
 ### 6 - Understand SMProtocol log output
-SMProtocol return more information in standard output, if you want to trace a problème or bug please check the log and create a ticket in gitticket manager.
+SMProtocol return more information in standard output, if you want to trace a problem or bug please check the log and create a ticket in "git-ticket" manager.
 
-**exemple of output**: 
+**example of output**: 
 ```
     _____ __  _______             __                   __
    / ___//  |/  / __ \_________  / /_____  _________  / /
@@ -125,7 +155,9 @@ SMProtocol return more information in standard output, if you want to trace a pr
 [tcp] Class Hook loaded
 [tcp] Garbage Collector...OK
 [tcp] Success: detached with pid <893>, parent pid <891>
-
+[plugin:noSql] Configuration loaded on 127.0.0.1 port=27017, db=download
+[plugin:noSql] MongoDb connection established
+[plugin:noSql] Successfully loaded
 [tcp] Binding on 127.0.0.1:8081.............
 [tcp] Running success
 Connection received from 127.0.0.1 on port 45649
@@ -135,27 +167,9 @@ Connection received from 127.0.0.1 on port 45649
 in memcache
 [tcp] >>> 159679 bytes to <127.0.0.1:45649@pid:893>: 
 [tcp] Connected closed with message "Success"
-[tcp]Garbage Collector: Number of cycle collected < 0 >
-[tcp] Save download(s) tracker in database.
 [tcp] Connection with all clients was terminated and closed, now save stats in database.
-[survey:893] ip <80.250.29.169> already exist with id <7>
-[survey:893] file <Capture.png> exist with id <2>
-[survey:893] download was saved with id <173>
-[survey:893] location was saved
-[survey:893] headers was saved
-[survey:893] pid was saved
-[survey:893] debug was saved
-[tcp] Save download  completed.
-[unset] Unset _instance
-[unset] Unset _stores
-[unset] Unset http_response
-[unset] Unset start_at
-[unset] Unset end_at
-[unset] Unset completed
-[unset] Unset percent
-[unset] Unset bytes_send
-[unset] Unset _file
-[unset] Unset _headers
-[unset] Unset _http_requests
+[tcp] Garbage Collector: Number of cycle collected < 0 >
+[tcp] Save download(s) tracker in database.
+[tcp@pid:5695] Save download completed.
 ```
 Is very important to trace log for any problems.

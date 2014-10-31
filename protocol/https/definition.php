@@ -1,6 +1,6 @@
 <?php
-/** Namespace protocol\tcp */
-namespace protocol\tcp;
+/** Namespace protocol\https */
+namespace protocol\https;
 
 /**
  * Class interpret
@@ -17,17 +17,17 @@ class definition extends \library\SMProtocol\abstracts\definition
         /** Switch on env */
         switch(APPLICATION_ENV) {
             case 'local':
-                $this->host = '127.0.0.1';
-                $this->port = 8081;
+                $this->channel->host = '127.0.0.1';
+                $this->channel->port = 8443;
                 break;
             case 'development':
-                $this->host = '10.42.10.87';
-                $this->port = 8081;
+                $this->channel->host = '10.42.10.87';
+                $this->channel->port = 8443;
                 break;
             case 'production':
             default:
-                $this->host = '10.42.10.87';
-                $this->port = 8081;
+            $this->channel->host = '10.42.10.87';
+            $this->channel->port = 8443;
         }
     }
 
