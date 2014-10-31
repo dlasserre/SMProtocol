@@ -16,7 +16,7 @@
  */
 
 /** Namespace */
-namespace tcp;
+namespace https;
 /** Requirements */
 require_once(APPLICATION_PATH.'/protocol/plugins/http/http.php');
 /** Usages */
@@ -24,7 +24,7 @@ use library\SMProtocol\SMProtocol;
 use plugins\http\http;
 
 /**
- * Class tcp
+ * Class https
  * @author Damien Lasserre <damien.lasserre@gmail.com>
  * @package hook
  */
@@ -75,7 +75,6 @@ class hook extends \library\SMProtocol\abstracts\hook
         $this->_download->setIp(new \ip($address, $port));
         $this->_download->start_at = time();
         $this->_speed = $this->_speed * 512;
-
     }
 
     /**
@@ -97,7 +96,7 @@ class hook extends \library\SMProtocol\abstracts\hook
 
             $this->_download->addHttpRequest(new \http_request($input));
             if ($request->getUri() == '/favicon.ico') {
-                SMProtocol::_print('[tcp]' . COLOR_BLUE . ' HTTP Request ask favicon.ico' . COLOR_WHITE . PHP_EOL);
+                SMProtocol::_print('[https]' . COLOR_BLUE . ' HTTP Request ask favicon.ico' . COLOR_WHITE . PHP_EOL);
                 $response->notFound()
                     ->header('Content-Type', 'text/html; charset=utf-8')
                     ->header('Date', $date)
@@ -111,11 +110,11 @@ class hook extends \library\SMProtocol\abstracts\hook
                 /** @var string $file */
                 $file = substr($request->_uri, 1);
                 /** @var string $_path */
-                $_path = APPLICATION_PATH . '/protocol/tcp/files/' . $file;
+                $_path = APPLICATION_PATH . '/protocol/https/files/' . $file;
                 if ($request->_uri) {
                     /** File not found or file condition cached */
                     if (!is_file($_path)) {
-                        SMProtocol::_print('[tcp] ' . COLOR_BLUE . 'File asked "' . $file . '" ' . COLOR_WHITE . PHP_EOL);
+                        SMProtocol::_print('[https] ' . COLOR_BLUE . 'File asked "' . $file . '" ' . COLOR_WHITE . PHP_EOL);
                         /** @var string $_response_text */
                         $_response_text = 'Oups ! File <b>"' . $file . '"</b> not found';
                         $response->notFound()
@@ -129,14 +128,14 @@ class hook extends \library\SMProtocol\abstracts\hook
                         $this->_download->addHttpRequest(new \http_request($response->__toString()));
                         $this->close();
                     } else {
-                        SMProtocol::_print('[tcp] ' . COLOR_BLUE . 'File downloaded "' . $file . '" ' . COLOR_WHITE . PHP_EOL);
+                        SMProtocol::_print('[https] ' . COLOR_BLUE . 'File downloaded "' . $file . '" ' . COLOR_WHITE . PHP_EOL);
                         /** @var string _file */
                         $this->_file = $_path;
                         /** @var int _size */
                         $this->_size = filesize($this->_file);
                         /** @var int $_range */
                         if($_range = $request->getHeader('Range')) {
-                            SMProtocol::_print('[tcp] Range received'.$_range.PHP_EOL); // Range debug
+                            SMProtocol::_print('[https] Range received'.$_range.PHP_EOL); // Range debug
                             /** @var int $size_unit */
                             /** @var string $range_orig */
                             list($size_unit, $range_orig) = explode('=', $_range, 2);
@@ -182,7 +181,7 @@ class hook extends \library\SMProtocol\abstracts\hook
                         /** @var resource $finfo */
                         $finfo = finfo_open(FILEINFO_MIME, null);
                         if($finfo) {
-                            $filename = APPLICATION_PATH.'/protocol/tcp/files/'.$file;
+                            $filename = APPLICATION_PATH.'/protocol/https/files/'.$file;
                             /** application/zip; charset=binary */
                             $this->_mime_file = finfo_file($finfo, $filename);
                         }
@@ -206,12 +205,12 @@ class hook extends \library\SMProtocol\abstracts\hook
             if($this->_offset == 0 or $this->_range) {
                 // ADD header range to inform browser is part request.
                 if(False !== $this->_range_start) {
-                    SMProtocol::_print('[tcp] '.COLOR_ORANGE.'Partial 206 Response send'.COLOR_WHITE.PHP_EOL);
+                    SMProtocol::_print('[https] '.COLOR_ORANGE.'Partial 206 Response send'.COLOR_WHITE.PHP_EOL);
                     $response->partial()
                         ->header('Content-Range', 'bytes '.(int)trim($this->_range_start).'-'.(int)trim($this->_range_end).'/'.$this->_size)
                         ->header('Content-Length', ($this->_range_end - $this->_range_start + 1));
                 } else {
-                    SMProtocol::_print('[tcp] '.COLOR_ORANGE.'OK 200 Response send'.COLOR_WHITE.PHP_EOL);
+                    SMProtocol::_print('[https] '.COLOR_ORANGE.'OK 200 Response send'.COLOR_WHITE.PHP_EOL);
                     $response->ok()
                         ->header('Content-Length', $size);
                 }

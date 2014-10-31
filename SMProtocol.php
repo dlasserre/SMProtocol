@@ -27,6 +27,7 @@ require_once(SMProtocol_PATH.'/cleanup.php');
 require_once(SMProtocol_PATH.'/interfaces/hook.php');
 require_once(SMProtocol_PATH.'/server/sender.php');
 require_once(SMProtocol_PATH . '/abstracts/hook.php');
+require_once(SMProtocol_PATH . '/abstracts/binding.php');
 require_once(SMProtocol_PATH.'/interfaces/definition.php');
 require_once(SMProtocol_PATH . '/abstracts/definition.php');
 

@@ -1,0 +1,26 @@
+{
+    "name": "dlasserre/SMProtocol",
+    "type": "library",
+    "description": "Protocol wrapper",
+    "keywords": ["download","http","sip","wrapper","cli","protocol"],
+    "homepage": "https://github.com/dlasserre/SMProtocol",
+    "version": "1.0",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Damien Lasserre",
+            "email": "damien.lasserre@gmail.com"
+        }
+    ],
+    "require": {
+        "php": ">=5.3"
+    },
+    "config": {
+        "preferred-install": "dist"
+    },
+    "minimum-stability": "stable",
+    "autoload": {
+        "psr-4": { "SMProtocol\\" : "library/SMProtocol/" }
+    },
+    "bin": ["SMProtocol"]
+}
