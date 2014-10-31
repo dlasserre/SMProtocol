@@ -1,20 +1,4 @@
 <?php
-/**
- * Approximate current stats download ( from Cecile ).
- * ---------------------------------------------------
- * TOS : 20 000 ( open source product ), without BPM
- * Eval: 1400 (BigData et SendBox)
- * ------------------- APPROXIMATE STATS USAGE ------------------------
- * TOS : 20.000 / 30 = 666  /day
- *     * 666 / 24    = 27   /hour
- *     * 27 / 60     = 0.46 /minutes -> 1 download for ~2 minutes.
- *
- * ------------------
- * Eval: 1400 / 30 = 46   /day
- *     * 46 / 24   = 1.91 /hour
- *     * 1.91/60   = 0.30 /minutes -> 1 download for ~30 minutes.
- */
-
 /** Namespace */
 namespace https;
 /** Requirements */
