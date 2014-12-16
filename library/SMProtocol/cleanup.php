@@ -73,12 +73,12 @@ class cleanup
                     $this->_cleanupArray($value);
                 } else {
                     echo PHP_EOL.COLOR_ORANGE;
-                    xdebug_debug_zval('value');
+                    //xdebug_debug_zval('value');
                     echo COLOR_WHITE;
                     //SMProtocol::_print(COLOR_RED.'['.$this->_class.'] Unset variable "'.$key.'"'.COLOR_WHITE.PHP_EOL);
                     unset($array[$key]);
                     echo COLOR_ORANGE;
-                    xdebug_debug_zval('value');
+                    //xdebug_debug_zval('value');
                     echo COLOR_WHITE;
                     echo PHP_EOL;
                 }
