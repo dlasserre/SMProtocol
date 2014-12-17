@@ -13,8 +13,6 @@ class binding
     public $host;
     /** @var  int $port */
     public $port;
-    /** @var  binding|bool $secure_channel */
-    public $other_channel = false;
-
-
-} 
+    /** @var  bool $secure_channel */
+    public $secure_channel;
+}

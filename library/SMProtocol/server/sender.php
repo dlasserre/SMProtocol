@@ -13,8 +13,11 @@ use library\SMProtocol\abstracts\definition;
  */
 class sender
 {
+    /** @var string $_protocol */
     protected $_protocol;
+    /** @var  string $address */
     public $address;
+    /** @var  int $port */
     public $port;
 
     /** @var resource $_socket */
@@ -56,11 +59,13 @@ class sender
         if($_length !== false) {
             if (@socket_write($this->_socket, $data, $_length) <= 0) {
                 $this->_last_error_code = socket_last_error($this->_socket);
+                /** Return */
                 return (false);
             }
+            SMProtocol::_print('['.$this->_protocol.']'.COLOR_GREEN.' >>> '.strlen($data).
+                ' bytes to <'.$this->address.':'.$this->port.COLOR_BLUE.'@pid:'.posix_getpid().COLOR_GREEN.'>: '.COLOR_ORANGE.$debug.COLOR_WHITE.PHP_EOL);
         }
-        SMProtocol::_print('['.$this->_protocol.']'.COLOR_GREEN.' >>> '.strlen($data).
-            ' bytes to <'.$this->address.':'.$this->port.COLOR_BLUE.'@pid:'.posix_getpid().COLOR_GREEN.'>: '.COLOR_ORANGE.$debug.COLOR_WHITE.PHP_EOL);
+
         /** Return */
         return (True);
     }
@@ -73,7 +78,7 @@ class sender
     public function received($block_size = 512)
     {
         /** @var string $_data */
-        $_data = @socket_read($this->_socket, (int)$block_size);
+        $_data = socket_read($this->_socket, (int)$block_size);
         if(empty($_data)) return ( False );
         if($_data) {
             SMProtocol::_print('['.$this->_protocol.']'.COLOR_ORANGE.' <<< '.strlen($_data).' bytes from <'.$this->address.':'.$this->port.'>'.COLOR_WHITE.PHP_EOL);
@@ -84,8 +89,13 @@ class sender
         return ( false );
     }
 
+    /**
+     * @author Damien Lasserre <dlasserre@talend.com>
+     * @return resource
+     */
     public function getSocket()
     {
+        /** Return */
         return ($this->_socket);
     }
 

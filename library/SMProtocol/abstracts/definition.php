@@ -13,10 +13,6 @@ abstract class definition extends \stdClass implements \library\SMProtocol\inter
     public $host;
     /** if port < 1024, must run server with root privilege */
     public $port;
-
-    /** @var  binding $channel */
-    public $channel;
-
     /** @var int $max_connection */
     public $max_connection = 5; // Max connection per process, if reached a new children process was created, in the process the multiple socket
     // manage by socket_select system call
@@ -47,11 +43,7 @@ abstract class definition extends \stdClass implements \library\SMProtocol\inter
      * @author Damien Lasserre <damien.lasserre@gmail.com>
      * @param array $configuration
      */
-    public function __construct(array $configuration)
-    {
-        $this->channel = new binding();
-        $this->secure_channel = new binding();
-    }
+    public function __construct(array $configuration) {}
 
     /**
      * @author Damien Lasserre <damien.lasserre@gmail.com>

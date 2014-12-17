@@ -2,7 +2,6 @@
 /** Namespace engine */
 namespace library\SMProtocol;
 /** Namespace usage */
-use library\SMProtocol\abstracts\binding;
 use library\SMProtocol\abstracts\hook;
 use library\SMProtocol\engine\server\semaphore;
 use library\SMProtocol\engine\server\sender;
@@ -53,8 +52,8 @@ class SMProtocol extends cleanup
         $_hook = null;
         /** @var array $_exclude_files */
         $_exclude_files = array('interfaces', 'hook.php', 'definition.php', '.', '..', 'plugins');
-
         include('header.txt');
+        clearstatcache();
         /** @var string $directory */
         while($directory = readdir($_dir))
         {
@@ -101,7 +100,7 @@ class SMProtocol extends cleanup
                             } else { // Child process
                                 /** @var definition $_instance */
                                 $_instance = new $_class();
-                                if(!$this->rootPrivilege($_instance->channel->port)) {
+                                if(!$this->rootPrivilege($_instance->port)) {
                                     SMProtocol::_print(COLOR_RED.$directory.' Stopped...'.COLOR_WHITE.PHP_EOL);
                                     unset($_instance);
                                     continue;
@@ -111,6 +110,7 @@ class SMProtocol extends cleanup
                                     /** @var string $_method */
                                     $_method = APPLICATION_ENV.'Plugin';
                                     if(method_exists($_instance, $_method)) {
+                                        /** @var mixed $_plugin */
                                         foreach ($this->_plugins as $_plugin) {
                                             $_configuration = $_instance->$_method();
                                             if(array_key_exists($_plugin, $_configuration)) {
@@ -121,6 +121,7 @@ class SMProtocol extends cleanup
                                     }
                                 }
                                 SMProtocol::_print(PHP_EOL);
+                                /** @noinspection PhpUnnecessaryFullyQualifiedNameInspection */
                                 new \library\SMProtocol\server\server($_instance, $directory);
                                 exit;
                             }
@@ -284,17 +285,30 @@ class SMProtocol extends cleanup
         if(!$mode) $mode = $_mode;
         /** store debug */
         self::$_debugs[] = $string;
+        /** @var string $log_file */
+        $log_file = sprintf(LOG_FILE, 'access');
+        /** @var int $_open_mode */
+        $_open_mode = FILE_APPEND;
+
+        if(LOG_ROTATE) { /** I suggest to enable this functionally */
+            /** @var string $log_file */
+            $log_file = sprintf(LOG_FILE, date('d-m-Y'));
+            if(!is_file($log_file)) {
+                /** @var int $_open_mode */
+                $_open_mode = null;
+            }
+        }
         if($mode == LOG_IN_FILE) {
             $string = str_replace(array(COLOR_WHITE, COLOR_GREEN, COLOR_ORANGE, COLOR_RED, COLOR_BLUE), '', $string);
             $string = '['.date('m-d-Y H:i:s').']: '.$string;
-            file_put_contents(LOG_FILE, $string, FILE_APPEND);
+            file_put_contents($log_file, $string, $_open_mode);
         } else if ($mode == LOG_IN_OUTPUT) {
             echo $string;
         } else if($mode === (LOG_IN_FILE | LOG_IN_OUTPUT)) {
             echo $string;
             $string = str_replace(array(COLOR_WHITE, COLOR_GREEN, COLOR_ORANGE, COLOR_RED, COLOR_BLUE), '', $string);
             $string = '['.date('m-d-Y H:i:s').']: '.$string;
-            file_put_contents(LOG_FILE, $string, FILE_APPEND);
+            file_put_contents($log_file, $string, $_open_mode);
         }
     }
 

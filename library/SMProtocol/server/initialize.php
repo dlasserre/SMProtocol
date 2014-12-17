@@ -24,13 +24,13 @@ class initialize extends cleanup
     /**
      * @author Damien Lasserre <damien.lasserre@gmail.com>
      * @param \library\SMProtocol\abstracts\definition|\library\SMProtocol\interfaces\definition $definition
-     * @param $_name
+     * @param string $_name
      * @throws \library\SMProtocol\exception\server
      * @internal param string $name
      */
     public function __construct(\library\SMProtocol\abstracts\definition $definition, $_name)
     {
-        if($definition->channel->host and $definition->channel->port) {
+        if($definition->host and $definition->port) {
             $this->_name = $_name;
             /** @var \library\SMProtocol\abstracts\definition _definition */
             $this->_definition = $definition;
@@ -55,12 +55,13 @@ class initialize extends cleanup
         if(false === $_socket) {
             throw new exception\server(socket_last_error());
         }
+        /** @var string $dot */
         /** Binding socket on host and port. */
-        $dot = '['.$this->_name.'] Binding on '.COLOR_BLUE.$this->_definition->channel->host.':'.$this->_definition->channel->port.COLOR_WHITE;
+        $dot = '['.$this->_name.'] Binding on '.COLOR_BLUE.$this->_definition->host.':'.$this->_definition->port.COLOR_WHITE;
         do {
             $dot .= '.';
             /** @var bool $binding */
-            $binding = @socket_bind($_socket, $this->_definition->channel->host, $this->_definition->channel->port);
+            $binding = @socket_bind($_socket, $this->_definition->host, $this->_definition->port);
             sleep(2);
             SMProtocol::_print($dot."\r");
             if(socket_last_error($_socket)) {
@@ -91,11 +92,18 @@ class initialize extends cleanup
             socket_close(self::$_socket);
     }
 
+    /**
+     * @author Damien Lasserre <dlasserre@talend.com>
+     * @param null $class
+     */
     public function _cleanup($class = null)
     {
         parent::_cleanup($class);
     }
 
+    /**
+     * @author Damien Lasserre <dlasserre@talend.com>
+     */
     public function __destruct()
     {
         parent::_cleanup(__CLASS__);
